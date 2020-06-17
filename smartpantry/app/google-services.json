@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "308580021179",
+    "firebase_url": "https://smart-pantry-9028c.firebaseio.com",
+    "project_id": "smart-pantry-9028c",
+    "storage_bucket": "smart-pantry-9028c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308580021179:android:ccf007aed5173fed818a9e",
+        "android_client_info": {
+          "package_name": "com.example.smartpantry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308580021179-2i8k6ec7jkhk4t63q8uutknh1e0khd2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxKhWdfOCac3BzUyWw_bbJo6QMIG_F9Bo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308580021179-2i8k6ec7jkhk4t63q8uutknh1e0khd2l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
