@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,7 @@ import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
 import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -40,14 +42,16 @@ class MainActivity : AppCompatActivity(){
     var verificationCode: String = ""
     var input_pantryID: String = ""
     var input_phonenumber:String = ""
-    var input_codeID: String = ""
 
     //firebase
     private lateinit var myRef: DatabaseReference // = FirebaseDatabase.getInstance().getReference()  //point to the root named "penquiz3d349"
     private lateinit var auth: FirebaseAuth
 
+
     //phoen number
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    private var check: Boolean = true
+
 
     /*--positiveButtonClick -> pass the Button text along with a Kotlin function that’s triggered when that button is clicked.
     The function is a part of the DialogInterface.OnClickListener() interface
@@ -62,14 +66,14 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
+        auth = FirebaseAuth.getInstance()
         pantryID = findViewById(R.id.pantry_id)
         phonenumber = findViewById(R.id.phone_id)
         codeID = findViewById(R.id.verification_id)
         send_button = findViewById(R.id.send_button)
         verify_button = findViewById(R.id.verify_button)
 
-        auth = FirebaseAuth.getInstance()
+
         //mDatabase = FirebaseDatabase.getInstance().getReference("antry ID")
 
         send_button.setOnClickListener { view: View? ->
@@ -88,7 +92,7 @@ class MainActivity : AppCompatActivity(){
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                 Toast.makeText(this@MainActivity, "verification completed!!!!!!!"+ credential, Toast.LENGTH_SHORT)
                     .show()
-                signin(credential)
+                //signin(credential)
             }
 
             override fun onVerificationFailed(e: FirebaseException) {
@@ -119,7 +123,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun signin(credential: PhoneAuthCredential) {
-        val senderID = auth.currentUser?.uid
+
         val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             LocalDateTime.now()
         } else {
@@ -127,27 +131,26 @@ class MainActivity : AppCompatActivity(){
         }
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
         val formatted = current.format(formatter)
-
-        input_codeID = codeID.getText().toString()
         input_pantryID= pantryID.getText().toString()
 
             auth.signInWithCredential(credential).addOnCompleteListener{
                 if(it.isSuccessful){
                     Toast.makeText(this@MainActivity, "login sucessful", Toast.LENGTH_SHORT)
                         .show()
+                    startActivity(Intent(this, PhoneActivity::class.java))
 
-                    myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(senderID.toString())
+                    val id =auth.currentUser?.uid
+                    myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id.toString())
 
                     myRef.child("phonenumber").setValue(input_phonenumber)
                     myRef.child("success").setValue(true)
                     myRef.child("date & time").setValue(formatted)
                     myRef.child("pantry id").setValue(input_pantryID)
 
-
 //                    myRef = FirebaseDatabase.getInstance().getReference("phone number")
 //                    myRef.child(input_phonenumber).setValue(input_phonenumber)
 
-                    startActivity(Intent(this, PhoneActivity::class.java))
+
                 }
                 else{
                     Toast.makeText(this@MainActivity, "cannot login", Toast.LENGTH_SHORT)
@@ -159,6 +162,7 @@ class MainActivity : AppCompatActivity(){
 
 
     private fun verify() {
+
         input_phonenumber = phonenumber.text.toString()
         checkPhoneNumbercallback(input_phonenumber)
 
@@ -173,15 +177,18 @@ class MainActivity : AppCompatActivity(){
             }
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
+                    check = false
                     Toast.makeText(this@MainActivity, "exist", Toast.LENGTH_SHORT)
                         .show()
 
                 }
                 else{
-                    Toast.makeText(this@MainActivity, "not exist", Toast.LENGTH_SHORT)
-                        .show()
+                    check = true
                     verificationcallback()
                     sendverificationNumber(inputPhonenumber)
+
+                    Toast.makeText(this@MainActivity, "not exist", Toast.LENGTH_SHORT)
+                        .show()
 //                    startActivity(Intent(this@MainActivity,VerificationActivity::class.java))
                 }
             }
@@ -198,6 +205,7 @@ class MainActivity : AppCompatActivity(){
             TimeUnit.SECONDS,                // Unit of timeout
             this,        // Activity (for callback binding)
             callbacks)
+
     }
 
     private fun authenticate() {
@@ -205,15 +213,14 @@ class MainActivity : AppCompatActivity(){
         Toast.makeText(this@MainActivity, "checl code"+verificationCode, Toast.LENGTH_SHORT)
             .show()
         //phone number already exist
-        if(verificationCode != null){
+        if(check == true){
             val input_code:String = codeID.getText().toString()
-
             val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(verificationCode, input_code)
-            Toast.makeText(this@MainActivity, "verify" + credential, Toast.LENGTH_SHORT).show()
             signin(credential)
+            Toast.makeText(this@MainActivity, "verify" + credential, Toast.LENGTH_SHORT).show()
         }
         //phone number does not exist and verification vode is sent
-        else{
+        else if(check == false){
 //            var builder = AlertDialog.Builder(this)
 //            // Set the alert dialog title
 //            builder.setTitle("THANK YOU")
