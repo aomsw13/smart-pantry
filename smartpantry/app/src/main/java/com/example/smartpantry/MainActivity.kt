@@ -147,8 +147,8 @@ class MainActivity : AppCompatActivity(){
                     myRef.child("date & time").setValue(formatted)
                     myRef.child("pantry id").setValue(input_pantryID)
 
-//                    myRef = FirebaseDatabase.getInstance().getReference("phone number")
-//                    myRef.child(input_phonenumber).setValue(input_phonenumber)
+                    myRef = FirebaseDatabase.getInstance().getReference("Pantry ID").child(input_pantryID)
+                    myRef.child("value").setValue(true)
 
 
                 }
@@ -178,18 +178,22 @@ class MainActivity : AppCompatActivity(){
             override fun onDataChange(p0: DataSnapshot) {
                 if(p0.exists()){
                     check = false
-                    Toast.makeText(this@MainActivity, "exist", Toast.LENGTH_SHORT)
-                        .show()
+                    val title:String =  "Error"
+                    val msg:String = "You already have sent request to system"
+                    displayDialog(title, msg)
 
+                    Toast.makeText(this@MainActivity, "exist", Toast.LENGTH_SHORT).show()
                 }
                 else{
                     check = true
                     verificationcallback()
                     sendverificationNumber(inputPhonenumber)
 
+                    val title:String =  "Notification"
+                    val msg:String = "verification code has been sent to your mobile phone "
+                    displayDialog(title, msg)
                     Toast.makeText(this@MainActivity, "not exist", Toast.LENGTH_SHORT)
                         .show()
-//                    startActivity(Intent(this@MainActivity,VerificationActivity::class.java))
                 }
             }
 
@@ -212,28 +216,34 @@ class MainActivity : AppCompatActivity(){
 
         Toast.makeText(this@MainActivity, "checl code"+verificationCode, Toast.LENGTH_SHORT)
             .show()
-        //phone number already exist
+        //phone number does not exist and verification vode is sent
         if(check == true){
             val input_code:String = codeID.getText().toString()
             val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(verificationCode, input_code)
             signin(credential)
             Toast.makeText(this@MainActivity, "verify" + credential, Toast.LENGTH_SHORT).show()
         }
-        //phone number does not exist and verification vode is sent
+        //phone number already exist
         else if(check == false){
-//            var builder = AlertDialog.Builder(this)
-//            // Set the alert dialog title
-//            builder.setTitle("THANK YOU")
-//            // Display a message on alert dialog
-//            builder.setMessage("Your message has been sent")
-//            builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = positiveButtonClick))
-//            // Finally, make the alert dialog using builder
-//            val dialog: AlertDialog = builder.create()
-//            dialog.show()
-            Toast.makeText(this@MainActivity, "invalid verification", Toast.LENGTH_SHORT)
-                .show()
+
+            val title:String =  "Error"
+            val msg:String = "You cannot sign in"
+            displayDialog(title, msg)
         }
 
+    }
+
+    private fun displayDialog(title: String, msg: String) {
+        var builder = AlertDialog.Builder(this)
+        // Set the alert dialog title
+        builder.setTitle(title)
+        // Display a message on alert dialog
+        builder.setMessage(msg)
+        builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = positiveButtonClick))
+        // Finally, make the alert dialog using builder
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+     //   Toast.makeText(this@MainActivity, "invalid verification", Toast.LENGTH_SHORT).show()
     }
 
 
