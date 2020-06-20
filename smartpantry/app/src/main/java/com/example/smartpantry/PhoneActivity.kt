@@ -2,18 +2,23 @@ package com.example.smartpantry
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended
+import org.eclipse.paho.client.mqttv3.MqttMessage
 
 
 class PhoneActivity : AppCompatActivity() {
 
     private lateinit var mauth: FirebaseAuth
     private lateinit var signout_button: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +28,6 @@ class PhoneActivity : AppCompatActivity() {
         signout_button = findViewById(R.id.signout_button)
         mauth = FirebaseAuth.getInstance()
 
-        val textView = findViewById<TextView>(R.id.message_success)
-
 
         signout_button.setOnClickListener { view: View? ->
             mauth.signOut()
@@ -32,6 +35,8 @@ class PhoneActivity : AppCompatActivity() {
             Toast.makeText(this, "logout success", Toast.LENGTH_SHORT)
                 .show()
         }
+
+
     }
 
     override fun onStart() {
@@ -44,4 +49,5 @@ class PhoneActivity : AppCompatActivity() {
                 .show()
         }
     }
+
 }
