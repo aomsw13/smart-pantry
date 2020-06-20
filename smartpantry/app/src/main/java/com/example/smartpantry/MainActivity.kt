@@ -3,7 +3,6 @@ package com.example.smartpantry
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
-import java.time.LocalDateTime
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -14,7 +13,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -22,17 +20,18 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
-import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_main.*
+import helpers.MqttClient
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended
+import org.eclipse.paho.client.mqttv3.MqttMessage
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     private lateinit var pantryID: EditText
     private lateinit var phonenumber: EditText
@@ -51,6 +50,14 @@ class MainActivity : AppCompatActivity(){
     //phoen number
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private var check: Boolean = true
+
+    //MQTT
+    //private var mqttClient: MqttClient = null
+
+    val mqttClient: MqttClient by lazy {
+        MqttClient(this)
+
+    }
 
 
     /*--positiveButtonClick -> pass the Button text along with a Kotlin function that’s triggered when that button is clicked.
@@ -73,18 +80,28 @@ class MainActivity : AppCompatActivity(){
         send_button = findViewById(R.id.send_button)
         verify_button = findViewById(R.id.verify_button)
 
-
         //mDatabase = FirebaseDatabase.getInstance().getReference("antry ID")
 
+
         send_button.setOnClickListener { view: View? ->
-            verify()}
+            verify()
+        }
 
         verify_button.setOnClickListener { view: View? ->
             authenticate()
+            startMqtt()
 
         }
 
     }
+
+    private fun startMqtt() {
+        mqttClient.connect(this.applicationContext)
+        mqttClient.subscriptionTopic = "pantry/ $input_pantryID /status"
+        mqttClient.publishTextMessage = "on"
+
+    }
+
 
     private fun verificationcallback(){
 
@@ -143,13 +160,12 @@ class MainActivity : AppCompatActivity(){
                     myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id.toString())
 
                     myRef.child("phonenumber").setValue(input_phonenumber)
-                    myRef.child("success").setValue(true)
+                    myRef.child("success").setValue("on")
                     myRef.child("date & time").setValue(formatted)
                     myRef.child("pantry id").setValue(input_pantryID)
 
                     myRef = FirebaseDatabase.getInstance().getReference("Pantry ID").child(input_pantryID)
-                    myRef.child("value").setValue(true)
-
+                    myRef.push().child(input_phonenumber).setValue("on")
 
                 }
                 else{
@@ -159,6 +175,7 @@ class MainActivity : AppCompatActivity(){
             }
 
     }
+
 
 
     private fun verify() {
