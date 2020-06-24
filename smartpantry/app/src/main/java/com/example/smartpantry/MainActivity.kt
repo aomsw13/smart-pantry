@@ -22,16 +22,14 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
 import com.google.firebase.database.*
 import helpers.MqttClient
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
-import org.eclipse.paho.client.mqttv3.MqttCallbackExtended
-import org.eclipse.paho.client.mqttv3.MqttMessage
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
     private lateinit var pantryID: EditText
     private lateinit var phonenumber: EditText
@@ -45,6 +43,8 @@ class MainActivity : AppCompatActivity() {
     //firebase
     private lateinit var myRef: DatabaseReference // = FirebaseDatabase.getInstance().getReference()  //point to the root named "penquiz3d349"
     private lateinit var auth: FirebaseAuth
+    var id: String = ""
+
 
 
     //phoen number
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(findViewById(R.id.toolbar))
+//        setSupportActionBar(findViewById(R.id.toolbar))
         auth = FirebaseAuth.getInstance()
         pantryID = findViewById(R.id.pantry_id)
         phonenumber = findViewById(R.id.phone_id)
@@ -93,12 +93,15 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+
     }
 
     private fun startMqtt() {
         mqttClient.connect(this.applicationContext)
-        mqttClient.subscriptionTopic = "pantry/ $input_pantryID /status"
+        mqttClient.publishTopic = "pantry/ $input_pantryID /statusBefore"
+        mqttClient.subscriptionTopic = "pantry/ $input_pantryID /statusAfter"
         mqttClient.publishTextMessage = "on"
+
 
     }
 
@@ -141,31 +144,50 @@ class MainActivity : AppCompatActivity() {
 
     private fun signin(credential: PhoneAuthCredential) {
 
+        val currentTimestamp = Date().getTime()
         val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             LocalDateTime.now()
         } else {
             TODO("VERSION.SDK_INT < O")
         }
+        Log.d("MainActivity", "currentTimeStamp $currentTimestamp")
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
         val formatted = current.format(formatter)
+        id = auth.currentUser?.uid.toString()
+
         input_pantryID= pantryID.getText().toString()
 
             auth.signInWithCredential(credential).addOnCompleteListener{
                 if(it.isSuccessful){
+
                     Toast.makeText(this@MainActivity, "login sucessful", Toast.LENGTH_SHORT)
                         .show()
-                    startActivity(Intent(this, PhoneActivity::class.java))
 
-                    val id =auth.currentUser?.uid
-                    myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id.toString())
+                    val mIntent = Intent(this, PhoneActivity::class.java)
+                    mIntent.putExtra("keyNo", input_phonenumber)
+                    mIntent.putExtra("keyID", id)
+                    startActivity(mIntent)
+
+                   // startActivity(Intent(this, PhoneActivity::class.java))
+
+                    myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id)
 
                     myRef.child("phonenumber").setValue(input_phonenumber)
-                    myRef.child("success").setValue("on")
+                    //myRef.child("success").setValue("on")
                     myRef.child("date & time").setValue(formatted)
+                    myRef.child("timestamp").setValue(currentTimestamp)
                     myRef.child("pantry id").setValue(input_pantryID)
+
 
                     myRef = FirebaseDatabase.getInstance().getReference("Pantry ID").child(input_pantryID)
                     myRef.push().child(input_phonenumber).setValue("on")
+
+//                    Handler().postDelayed({
+//                        Log.d("MainActivity", "current enter handle postDelay")
+//                        deleteFirebaseCallback()
+//                    }, 60000)
+
+
 
                 }
                 else{
@@ -262,6 +284,8 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
      //   Toast.makeText(this@MainActivity, "invalid verification", Toast.LENGTH_SHORT).show()
     }
+
+
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
