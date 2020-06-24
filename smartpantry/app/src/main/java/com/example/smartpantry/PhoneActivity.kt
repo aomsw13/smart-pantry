@@ -1,24 +1,29 @@
 package com.example.smartpantry
 
+import android.R.attr.key
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
-import org.eclipse.paho.client.mqttv3.MqttCallbackExtended
-import org.eclipse.paho.client.mqttv3.MqttMessage
 
 
-class PhoneActivity : AppCompatActivity() {
+open class PhoneActivity : MainActivity() {
 
     private lateinit var mauth: FirebaseAuth
     private lateinit var signout_button: Button
 
+
+    companion object{
+        val BOARDCAST_KEY_ID: String = "keyIDBroadcast"
+        val BOARDCAST_KEY_PHONE: String = "keyNoBroadcast"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,26 +33,56 @@ class PhoneActivity : AppCompatActivity() {
         signout_button = findViewById(R.id.signout_button)
         mauth = FirebaseAuth.getInstance()
 
-
         signout_button.setOnClickListener { view: View? ->
-            mauth.signOut()
+
+            startAlert()
             startActivity(Intent(this, MainActivity::class.java))
-            Toast.makeText(this, "logout success", Toast.LENGTH_SHORT)
-                .show()
+          //  mauth.signOut()
+//            startActivity(Intent(this, ReadyToDelete::class.java))
+//            Toast.makeText(this, "logout success", Toast.LENGTH_SHORT)
+//                .show()
+
+
         }
 
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        if(mauth.currentUser == null){
-            startActivity(Intent(this, MainActivity::class.java))
+
+//    override fun onStart() {
+//        super.onStart()
+//        if(mauth.currentUser == null){
+//            startActivity(Intent(this, MainActivity::class.java))
+//        }
+//        else{
+//            Toast.makeText(this, "already sign in", Toast.LENGTH_SHORT)
+//                .show()
+//        }
+//    }
+
+    fun startAlert() {
+        Log.d("PhoneActivity", "enter startAlert")
+        val numPhone= intent?.getStringExtra("keyNo")
+        val numID= intent?.getStringExtra("keyID")
+
+        Log.d("PhoneActivity", "enter phone $numPhone")
+        Log.d("PhoneActivity", "enter ID $numID")
+
+        val intent = Intent(this, MyBroadcastReceiver::class.java).apply {
+            putExtra(BOARDCAST_KEY_PHONE,numPhone)
+            putExtra(BOARDCAST_KEY_ID,numID)
         }
-        else{
-            Toast.makeText(this, "already sign in", Toast.LENGTH_SHORT)
-                .show()
-        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            this.applicationContext, 234324243, intent, 0
+        )
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager[AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+                + 30 * 1000] = pendingIntent
+        Toast.makeText(this, "Alarm set in 30 seconds", Toast.LENGTH_LONG).show()
     }
+
+
 
 }
