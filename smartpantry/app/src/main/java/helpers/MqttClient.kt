@@ -1,6 +1,7 @@
 package helpers
 
 import android.content.Context
+import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartpantry.MainActivity
@@ -37,13 +38,6 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
             override fun messageArrived(topic: String?, message: MqttMessage?) {
 
                 if(message.toString() == "closed"){
-                 //   receiveMessage = message.toString()
-////
-//////                    val dbRef = FirebaseDatabase.getInstance().reference
-//////                    dbRef.child("Unique sender id")
-//////                    val updates: MutableMap<String, Any> = HashMap()
-//////                    updates["room_price"] = receiveMessage.toString()
-//////                    dbRef.updateChildren(updates)
 
                     Log.d("MqttClient", "test id: $iduser")
                     Log.d(TAG, "Receive message: ${message.toString()} from topic: $topic")
@@ -52,14 +46,8 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
                     val updates: MutableMap<String, Any> = HashMap()
                     updates["success"] = "off after"
                     ref.updateChildren(updates)
-////
-//////                    val updates: MutableMap<String, Any> = HashMap()
-//////
-//////                    updates["success"] = "off"
-//////                    updates["date&time after"] = "newscore"
-//////
-//////                    ref.updateChildren(updates)
-////
+                    unsubscribe(subscriptionTopic.toString())
+
                 }
 
             }
@@ -84,8 +72,12 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
             mqttClient.connect(options, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG, "Connection success")
-                    subscribeTopic()
                     publishMessage()
+                    Handler().postDelayed({
+                        Log.d("MqttClient", "current enter handle postDelay")
+                        subscribeTopic()
+                    }, 5000)
+
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -157,6 +149,22 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                     Log.d(TAG, "Failed to disconnect")
+                }
+            })
+        } catch (e: MqttException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun unsubscribe(topic: String) {
+        try {
+            mqttClient.unsubscribe(topic, null, object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+                    Log.d(TAG, "Unsubscribed to $topic")
+                }
+
+                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    Log.d(TAG, "Failed to unsubscribe $topic")
                 }
             })
         } catch (e: MqttException) {
