@@ -100,7 +100,7 @@ open class MainActivity : AppCompatActivity() {
         mqttClient.connect(this.applicationContext)
         mqttClient.publishTopic = "pantry/ $input_pantryID /statusBefore"
         mqttClient.subscriptionTopic = "pantry/ $input_pantryID /statusAfter"
-        mqttClient.publishTextMessage = "on"
+        mqttClient.publishTextMessage = "open"
 
 
     }
