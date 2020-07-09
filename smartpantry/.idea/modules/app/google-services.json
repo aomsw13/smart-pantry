@@ -8,12 +8,57 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:308580021179:android:9a7c97dada2189cd818a9e",
+        "android_client_info": {
+          "package_name": "com.example.smartfoodpantry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308580021179-ta1u2h37ksf8tjvhcui9k1a5p93p7osu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smartfoodpantry",
+            "certificate_hash": "4809a4c89ef09738532ce0500cfcc86d3536fd88"
+          }
+        },
+        {
+          "client_id": "308580021179-2i8k6ec7jkhk4t63q8uutknh1e0khd2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxKhWdfOCac3BzUyWw_bbJo6QMIG_F9Bo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308580021179-2i8k6ec7jkhk4t63q8uutknh1e0khd2l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:308580021179:android:ccf007aed5173fed818a9e",
         "android_client_info": {
           "package_name": "com.example.smartpantry"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "308580021179-pjpe7q7pnvutljjrum25fb4lvl3oa1nc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smartpantry",
+            "certificate_hash": "c57d42ea8717c49bcd1455e0d2a0550a4d91ffc7"
+          }
+        },
         {
           "client_id": "308580021179-t290ade947bnjc5hjk5cs3jr2bke42dn.apps.googleusercontent.com",
           "client_type": 1,
