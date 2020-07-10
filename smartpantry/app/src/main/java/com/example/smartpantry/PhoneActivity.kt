@@ -36,7 +36,7 @@ open class PhoneActivity : MainActivity() {
         signout_button.setOnClickListener { view: View? ->
 
             startAlert()
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, UserType::class.java))
           //  mauth.signOut()
 //            startActivity(Intent(this, ReadyToDelete::class.java))
 //            Toast.makeText(this, "logout success", Toast.LENGTH_SHORT)
@@ -79,7 +79,7 @@ open class PhoneActivity : MainActivity() {
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager[AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                + 30 * 1000] = pendingIntent
+                + 5 * 1000] = pendingIntent
         Toast.makeText(this, "Alarm set in 30 seconds", Toast.LENGTH_LONG).show()
     }
 
