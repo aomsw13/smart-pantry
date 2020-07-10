@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+
+
+        <TextView
+            android:id="@+id/pantry_info"
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="25dp"
+            android:text="@string/pantry_information"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/empty_pantryId"
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="50dp"
+            android:text="@string/numberid"
+            android:visibility="gone"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/empty_pantryStatus"
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="50dp"
+            android:text="@string/pantry_status"
+            android:visibility="gone"
+            android:textSize="18dp" />
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
+
+
+
+</LinearLayout>
