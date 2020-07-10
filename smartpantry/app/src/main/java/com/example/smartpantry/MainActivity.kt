@@ -45,8 +45,6 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     var id: String = ""
 
-
-
     //phoen number
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private var check: Boolean = true
@@ -58,6 +56,10 @@ open class MainActivity : AppCompatActivity() {
         MqttClient(this)
 
     }
+
+    //User Type value from clicking button
+
+
 
 
     /*--positiveButtonClick -> pass the Button text along with a Kotlin function that’s triggered when that button is clicked.
@@ -163,24 +165,35 @@ open class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity, "login sucessful", Toast.LENGTH_SHORT)
                         .show()
 
-                    val mIntent = Intent(this, PhoneActivity::class.java)
-                    mIntent.putExtra("keyNo", input_phonenumber)
-                    mIntent.putExtra("keyID", id)
-                    startActivity(mIntent)
+//                    val mIntent = Intent(this, PhoneActivity::class.java)
+//                    mIntent.putExtra("keyNo", input_phonenumber)
+//                    mIntent.putExtra("keyID", id)
+//                    startActivity(mIntent)
 
                    // startActivity(Intent(this, PhoneActivity::class.java))
-
-                    myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id)
-
-                    myRef.child("phonenumber").setValue(input_phonenumber)
-                    //myRef.child("success").setValue("on")
-                    myRef.child("date & time").setValue(formatted)
-                    myRef.child("timestamp").setValue(currentTimestamp)
-                    myRef.child("pantry id").setValue(input_pantryID)
+                    val userButtonId= intent?.getStringExtra("userID")
+                    Log.d("MainActivity", "user type id $userButtonId")
 
 
-                    myRef = FirebaseDatabase.getInstance().getReference("Pantry ID").child(input_pantryID)
-                    myRef.push().child(input_phonenumber).setValue("on")
+                        Log.d("MainActivity", "enter taker type")
+
+                        val mIntent = Intent(this, PhoneActivity::class.java)
+                        mIntent.putExtra("keyNo", input_phonenumber)
+                        mIntent.putExtra("keyID", id)
+                        startActivity(mIntent)
+
+                        myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(auth.currentUser?.uid.toString())
+                        myRef.child("phonenumber").setValue(input_phonenumber)
+                        //myRef.child("success").setValue("on")
+                        myRef.child("date & time").setValue(formatted)
+                        myRef.child("timestamp").setValue(currentTimestamp)
+                        myRef.child("pantry id").setValue(input_pantryID)
+
+
+                        myRef = FirebaseDatabase.getInstance().getReference("Pantry ID").child(input_pantryID)
+                        myRef.push().child(input_phonenumber).setValue("on")
+
+
 
 //                    Handler().postDelayed({
 //                        Log.d("MainActivity", "current enter handle postDelay")
