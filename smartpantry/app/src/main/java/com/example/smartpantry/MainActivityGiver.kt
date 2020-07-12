@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.smartpantry.Adapter.MyAdapter
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -41,12 +42,12 @@ class MainActivityGiver : AppCompatActivity() {
     //phoen number
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
-    val mqttGiver: MqttGiver by lazy {
-        MqttGiver(this)
+//    val mqttGiver: MqttGiver by lazy {
+//        MqttGiver(this)
+//
+//    }
 
-    }
-    var temp_id = mqttGiver.receiveTopicPantryId.toString()
-    var temp_status = mqttGiver.receiveTopicPantryStatus
+   // var tempPantryId = myAdapter.pantryid
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,18 +69,19 @@ class MainActivityGiver : AppCompatActivity() {
 
         verify_button.setOnClickListener { view: View? ->
             authenticate()
-            startMqtt()
+            //startMqtt()
         }
     }
 
 
-    private fun startMqtt() {
-        mqttGiver.connect(this.applicationContext)
-        mqttGiver.subscriptionTopicPantryId = "pantry/+/emptyPantryId"
-        mqttGiver.subscriptionTopicPantryStatus = "pantry/+/emptyPantryStatus"
-        Log.d("FETCHING", "startMqtt")
-        //setValueToFirebase(mqttGiver.receiveTopicPantryId.toString(), mqttGiver.receiveTopicPantryStatus)
-    }
+//    private fun startMqtt() {
+//        mqttGiver.connect(this.applicationContext)
+//        mqttGiver.subscriptionTopicPantryId = "pantry/+/emptyPantryId"
+//        mqttGiver.subscriptionTopicPantryStatus = "pantry/+/emptyPantryStatus"
+//        mqttGiver.publishTextMessage = "open"
+//        Log.d("FETCHING", "startMqtt")
+//        //setValueToFirebase(mqttGiver.receiveTopicPantryId.toString(), mqttGiver.receiveTopicPantryStatus)
+//    }
 
 
     private fun signin(credential: PhoneAuthCredential) {
@@ -102,11 +104,6 @@ class MainActivityGiver : AppCompatActivity() {
                 Toast.makeText(this@MainActivityGiver, "login sucessful", Toast.LENGTH_SHORT)
                     .show()
 
-//                    val mIntent = Intent(this, PhoneActivity::class.java)
-//                    mIntent.putExtra("keyNo", input_phonenumber)
-//                    mIntent.putExtra("keyID", id)
-//                    startActivity(mIntent)
-
                 // startActivity(Intent(this, PhoneActivity::class.java))
                 val userButtonId= intent?.getStringExtra("userID")
                 Log.d("MainActivityGiver", "user type id $userButtonId")
@@ -124,7 +121,6 @@ class MainActivityGiver : AppCompatActivity() {
                     //myRef.child("success").setValue("on")
                     myRef.child("date & time").setValue(formatted)
                     myRef.child("timestamp").setValue(currentTimestamp)
-
 
             }
             else{
