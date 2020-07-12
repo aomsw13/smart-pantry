@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartpantry.GiverSelectPantryActivity
 import com.example.smartpantry.Model.PantryEmpty
 import com.example.smartpantry.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import helpers.MqttClient
 import helpers.MqttGiver
 
@@ -45,6 +48,7 @@ class MyAdapter(internal var context: MutableList<PantryEmpty>): RecyclerView.Ad
     }
 
     internal  var userList: List<PantryEmpty>
+    var pantryid = ""
 
 
     init{
@@ -72,8 +76,10 @@ class MyAdapter(internal var context: MutableList<PantryEmpty>): RecyclerView.Ad
             override fun onClick(it: View?) {
                 val mIntent = Intent(it!!.context, GiverSelectPantryActivity::class.java)
                 mIntent.putExtra("pantryIdAdapter", context.get(position).pantryID )
+
                 it.context.startActivity(mIntent)
                 Log.d("MyAdapter", "enter setOnclickListener & pantry ID is " + context.get(position).pantryID)
+
 
             }
 
