@@ -2,7 +2,6 @@ package com.example.smartpantry
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,10 +12,10 @@ import com.example.smartpantry.callback.PantryCallback
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.android.gms.common.api.ResultCallback as ResultCallback
+import helpers.MqttGiver
 
 
-class PantryActivity : AppCompatActivity(){
+class PantryActivity() : AppCompatActivity(){
 
     private lateinit var mRecycleView: RecyclerView
     private lateinit var database: FirebaseDatabase
@@ -29,6 +28,13 @@ class PantryActivity : AppCompatActivity(){
     private lateinit var textId: TextView
     private lateinit var textStatus: TextView
 
+    //firebase
+
+
+//    val mqttGiver: MqttGiver by lazy {
+//        MqttGiver(this@PantryActivity)
+//
+//    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +56,8 @@ class PantryActivity : AppCompatActivity(){
         textStatus = findViewById(R.id.empty_pantryStatus)
 
 
+//        startMqtt()
+//        setValueToFirebase(mqttGiver.receiveTopicPantryId, mqttGiver.receiveTopicPantryStatus)
 
         fetchData(object: PantryCallback {
             override fun onCallBack(pantries: List<PantryEmpty>) {
@@ -66,6 +74,8 @@ class PantryActivity : AppCompatActivity(){
 
     private fun fetchData(callback: PantryCallback) {
         //fetching data from database
+
+
         database = FirebaseDatabase.getInstance()
         resultRef = database.getReference()
         resultRef.child("Empty Pantry").addValueEventListener(object: ValueEventListener{
@@ -80,6 +90,7 @@ class PantryActivity : AppCompatActivity(){
                 dataList.clear()
                 for(child: DataSnapshot in chidren){
                     val pantryResult: PantryEmpty? = child.getValue(PantryEmpty::class.java)
+                    Log.d("fetching", "child "+ pantryResult)
                     pantryResult?.let { dataList.add(it) }
                     Log.d("fetching", "pantryID : ${pantryResult?.pantryID} pantryStatus : ${pantryResult?.status}")
 
@@ -90,7 +101,38 @@ class PantryActivity : AppCompatActivity(){
             }
 
         })
+
+
+//        tempPantryEmpty.pantryID= mqttGiver.receiveTopicPantryId.toString()
+//        tempPantryEmpty.status = mqttGiver.receiveTopicPantryStatus.toString()
+//
+//        dataList.a
+//        Log.d("fetching", "pantryID : ${tempPantryEmpty.pantryID} pantryStatus : ${tempPantryEmpty.status}")
+//        Log.d("fetching", dataList.toString())
+//        callback.onCallBack(dataList)
     }
+
+//    private fun setValueToFirebase(receiveTopicPantryId: String?, receiveTopicPantryStatus: String?) {
+//
+//        resultRef = FirebaseDatabase.getInstance().getReference("Empty Pantry").child("pantryId").child(receiveTopicPantryId.toString())
+//        resultRef.child("pantryID").setValue(receiveTopicPantryId)
+//        resultRef.child("status").setValue(receiveTopicPantryStatus)
+//        Log.d("FETCHING", "setValueToFirebase")
+//
+//
+//    }
+//
+//    private fun startMqtt() {
+//        mqttGiver.connect(this.applicationContext)
+////        mqttGiver.publishTopic = "pantry/ $input_pantryID /statusBefore"
+//        mqttGiver.subscriptionTopicPantryId = "pantry/+/emptyPantryId"
+//        mqttGiver.subscriptionTopicPantryStatus = "pantry/+/emptyPantryStatus"
+////        mqttGiver.publishTextMessage = "open"
+//        Log.d("FETCHING", "startMqtt")
+//
+//
+//
+//    }
 
 
 }
