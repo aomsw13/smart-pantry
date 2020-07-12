@@ -5,6 +5,7 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartpantry.MainActivity
+import com.example.smartpantry.MainActivityGiver
 import com.example.smartpantry.PhoneActivity
 import com.google.firebase.database.*
 import org.eclipse.paho.android.service.MqttAndroidClient
@@ -22,7 +23,7 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
     var publishTopic: String? = null
     var publishTextMessage: String? = null
     var receiveMessage: String? = null
-    var iduser = mainActivity.id
+    var idUserTaker = mainActivity.id
 
     //firebase
 //    private lateinit var myRef1: DatabaseReference // = FirebaseDatabase.getInstance().getReference()  //point to the root named "penquiz3d349"
@@ -39,10 +40,10 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
 
                 if(message.toString() == "closed"){
 
-                    Log.d("MqttClient", "test id: $iduser")
+                    Log.d("MqttClient", "test id: $idUserTaker")
                     Log.d(TAG, "Receive message: ${message.toString()} from topic: $topic")
 
-                    val ref = FirebaseDatabase.getInstance().reference.child("Unique sender id").child(iduser.toString())
+                    val ref = FirebaseDatabase.getInstance().reference.child("Unique sender id").child(idUserTaker.toString())
                     val updates: MutableMap<String, Any> = HashMap()
                     updates["success"] = "off after"
                     ref.updateChildren(updates)
