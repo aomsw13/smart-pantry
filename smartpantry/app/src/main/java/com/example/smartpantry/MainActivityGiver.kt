@@ -3,7 +3,6 @@ package com.example.smartpantry
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -18,7 +17,6 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import helpers.MqttClient
 import helpers.MqttGiver
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -43,6 +41,13 @@ class MainActivityGiver : AppCompatActivity() {
     //phoen number
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
+    val mqttGiver: MqttGiver by lazy {
+        MqttGiver(this)
+
+    }
+    var temp_id = mqttGiver.receiveTopicPantryId.toString()
+    var temp_status = mqttGiver.receiveTopicPantryStatus
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,10 +68,18 @@ class MainActivityGiver : AppCompatActivity() {
 
         verify_button.setOnClickListener { view: View? ->
             authenticate()
+            startMqtt()
         }
     }
 
 
+    private fun startMqtt() {
+        mqttGiver.connect(this.applicationContext)
+        mqttGiver.subscriptionTopicPantryId = "pantry/+/emptyPantryId"
+        mqttGiver.subscriptionTopicPantryStatus = "pantry/+/emptyPantryStatus"
+        Log.d("FETCHING", "startMqtt")
+        //setValueToFirebase(mqttGiver.receiveTopicPantryId.toString(), mqttGiver.receiveTopicPantryStatus)
+    }
 
 
     private fun signin(credential: PhoneAuthCredential) {
