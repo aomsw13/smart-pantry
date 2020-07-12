@@ -4,15 +4,16 @@ import android.content.Context
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.smartpantry.MainActivityGiver
+import com.example.smartpantry.Adapter.MyAdapter
 import com.example.smartpantry.PhoneActivity
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.example.smartpantry.UserType
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
 
-class MqttGiver(mainActivityGiver: MainActivityGiver) : AppCompatActivity() {
+class MqttGiver(userType: UserType) : AppCompatActivity() {
 
     private lateinit var mqttClient: MqttAndroidClient
     // TAG
@@ -24,7 +25,8 @@ class MqttGiver(mainActivityGiver: MainActivityGiver) : AppCompatActivity() {
     var publishTopic: String? = null
     var publishTextMessage: String? = null
     var receiveMessage: String? = null
-    var idUserGiver = mainActivityGiver
+    private lateinit var auth: FirebaseAuth
+
 
     //send pantry id and status to PantryActivity.kt
     var receiveTopicPantryId: String? = null
@@ -35,6 +37,8 @@ class MqttGiver(mainActivityGiver: MainActivityGiver) : AppCompatActivity() {
 
     //firebase
     private lateinit var myRef: DatabaseReference // = FirebaseDatabase.getInstance().getReference()  //point to the root named "penquiz3d349"
+
+
 
     private lateinit var phoneActivity: PhoneActivity
 
@@ -53,7 +57,7 @@ class MqttGiver(mainActivityGiver: MainActivityGiver) : AppCompatActivity() {
                     Log.d(TAG, "Receive numerical message: ${message.toString()} from topic: $topic")
                     receiveTopicPantryId = message.toString()
                     Log.d(TAG, "Receive numerical message and ready to send: ${receiveTopicPantryId} from topic: $topic")
-                    unsubscribe(subscriptionTopicPantryId.toString())
+                  //  unsubscribe(subscriptionTopicPantryId.toString())
 
                 }
                 //string is not numerical
@@ -61,10 +65,15 @@ class MqttGiver(mainActivityGiver: MainActivityGiver) : AppCompatActivity() {
                     Log.d(TAG, "Receive string message: ${message.toString()} from topic: $topic")
                     receiveTopicPantryStatus = message.toString()
                     Log.d(TAG, "Receive string message and ready to send: ${receiveTopicPantryStatus} from topic: $topic")
-                    unsubscribe(subscriptionTopicPantryStatus.toString())
+                   // unsubscribe(subscriptionTopicPantryStatus.toString())
                 }
 
-                setValueToFirebase(receiveTopicPantryId.toString(), receiveTopicPantryStatus.toString())
+                if(receiveTopicPantryStatus == "empty"){
+                    setValueToFirebase(receiveTopicPantryId.toString(), receiveTopicPantryStatus.toString())
+                }
+               else{
+                    removeValue(receiveTopicPantryId)
+                }
 
             }
 
@@ -106,6 +115,31 @@ class MqttGiver(mainActivityGiver: MainActivityGiver) : AppCompatActivity() {
 
     }
 
+    private fun removeValue(receiveTopicPantryId: String?) {
+
+        myRef = FirebaseDatabase.getInstance().getReference("Empty Pantry")
+        val oldItems: Query = myRef.child("pantryId").orderByChild(receiveTopicPantryId.toString())
+        Log.d(TAG, "ready to remove value $receiveTopicPantryId")
+        oldItems.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                throw error.toException();
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d(TAG, "remove value $receiveTopicPantryId")
+                for (itemSnapshot in snapshot.children) {
+                    Log.d(TAG, "already remove value $receiveTopicPantryId")
+                    itemSnapshot.ref.removeValue()
+                }
+            }
+
+        })
+
+
+//        myRef = FirebaseDatabase.getInstance().getReference("Empty Pantry").child("pantryId").child(receiveTopicPantryId.toString())
+//        myRef.child(receiveTopicPantryId.toString()).removeValue();
+    }
+
     private fun setValueToFirebase(receiveTopicPantryId: String?, receiveTopicPantryStatus: String?) {
 
         // Log.d("FETCHING", "receiveValue $receiveTopicPantryId")
@@ -113,9 +147,10 @@ class MqttGiver(mainActivityGiver: MainActivityGiver) : AppCompatActivity() {
         myRef = FirebaseDatabase.getInstance().getReference("Empty Pantry").child("pantryId").child(receiveTopicPantryId.toString())
         myRef.child("pantryID").setValue(receiveTopicPantryId)
         myRef.child("status").setValue(receiveTopicPantryStatus)
+
+
         Log.d("FETCHING", "value $receiveTopicPantryId $receiveTopicPantryStatus")
         Log.d("FETCHING", "setValueToFirebase")
-
 
     }
 
