@@ -46,11 +46,6 @@ class MyAdapter(internal var context: MutableList<PantryEmpty>): RecyclerView.Ad
 
     internal  var userList: List<PantryEmpty>
 
-    val mqttClient: MqttGiver by lazy {
-        MqttGiver(this)
-
-    }
-
 
     init{
         this.userList = ArrayList()
@@ -80,10 +75,7 @@ class MyAdapter(internal var context: MutableList<PantryEmpty>): RecyclerView.Ad
                 it.context.startActivity(mIntent)
                 Log.d("MyAdapter", "enter setOnclickListener & pantry ID is " + context.get(position).pantryID)
 
-
             }
-            
-
 
         })
     }
