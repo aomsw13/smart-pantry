@@ -30,6 +30,8 @@ open class PhoneActivity : MainActivity() {
         setContentView(R.layout.activity_phone)
 //        setSupportActionBar(findViewById(R.id.toolbar))
 
+
+
         signout_button = findViewById(R.id.signout_button)
         mauth = FirebaseAuth.getInstance()
 
@@ -37,6 +39,7 @@ open class PhoneActivity : MainActivity() {
 
             startAlert()
             startActivity(Intent(this, UserType::class.java))
+            mauth.signOut()
           //  mauth.signOut()
 //            startActivity(Intent(this, ReadyToDelete::class.java))
 //            Toast.makeText(this, "logout success", Toast.LENGTH_SHORT)
