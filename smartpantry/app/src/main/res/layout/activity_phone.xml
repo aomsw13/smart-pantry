@@ -3,32 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+
+    >
 
 
-    <TextView
-        android:id="@+id/message_success"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="272dp"
-        android:text="Phone Authentication Success!!"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/signout_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="sign out"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="350dp"
-        android:layout_marginLeft="150dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/message_success"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone Authentication Success!!"
+            android:layout_marginTop="230dp"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <Button
+            android:id="@+id/signout_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sign out"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            />
+
+    </LinearLayout>
+
 
 
 
