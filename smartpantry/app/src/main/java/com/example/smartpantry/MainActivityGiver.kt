@@ -1,5 +1,6 @@
 package com.example.smartpantry
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartpantry.Adapter.MyAdapter
 import com.google.firebase.FirebaseException
@@ -42,12 +44,10 @@ class MainActivityGiver : AppCompatActivity() {
     //phoen number
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
-//    val mqttGiver: MqttGiver by lazy {
-//        MqttGiver(this)
-//
-//    }
-
-   // var tempPantryId = myAdapter.pantryid
+    val positiveButtonClick = { dialog: DialogInterface, which: Int ->
+        Toast.makeText(this,
+            android.R.string.yes, Toast.LENGTH_SHORT).show()
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +61,8 @@ class MainActivityGiver : AppCompatActivity() {
         send_button = findViewById(R.id.send_button_giver)
         verify_button = findViewById(R.id.verify_button_giver)
 
-        //mDatabase = FirebaseDatabase.getInstance().getReference("antry ID")
+        supportActionBar!!.title = "Giver"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         send_button.setOnClickListener { view: View? ->
             verify()
@@ -103,29 +104,30 @@ class MainActivityGiver : AppCompatActivity() {
 
                 Toast.makeText(this@MainActivityGiver, "login sucessful", Toast.LENGTH_SHORT)
                     .show()
-
-                // startActivity(Intent(this, PhoneActivity::class.java))
                 val userButtonId= intent?.getStringExtra("userID")
                 Log.d("MainActivityGiver", "user type id $userButtonId")
 
 
-                    Log.d("MainActivityGiver", "enter giver type")
+                Log.d("MainActivityGiver", "enter giver type")
 
-                    val mIntent = Intent(this, PantryActivity::class.java)
-                    //send ID of user's phone number to PantryActivity to keep pantry id when user select
-                    mIntent.putExtra("pantryKeyID", id)
-                    startActivity(mIntent)
+                val mIntent = Intent(this, PantryActivity::class.java)
+                //send ID of user's phone number to PantryActivity to keep pantry id when user select
+                //mIntent.putExtra("pantryKeyID", id)
+                startActivity(mIntent)
 
-                    myRef = FirebaseDatabase.getInstance().getReference("Unique giver id").child(id)
-                    myRef.child("phonenumber").setValue(input_phonenumber)
-                    //myRef.child("success").setValue("on")
-                    myRef.child("date & time").setValue(formatted)
-                    myRef.child("timestamp").setValue(currentTimestamp)
+                Log.d("MainActivityGiver", "mauth "+ id)
+                myRef = FirebaseDatabase.getInstance().getReference("Unique giver id").child(auth.currentUser?.uid.toString())
+                myRef.child("phonenumber").setValue(input_phonenumber)
+                myRef.child("date & time").setValue(formatted)
+                myRef.child("timestamp").setValue(currentTimestamp)
 
             }
             else{
                 Toast.makeText(this@MainActivityGiver, "cannot login", Toast.LENGTH_SHORT)
                     .show()
+                val title:String =  "Error"
+                val msg:String = "Verification code is incorrect"
+                displayDialog(title, msg)
             }
         }
 
@@ -193,5 +195,19 @@ class MainActivityGiver : AppCompatActivity() {
             signin(credential)
 
 
+    }
+
+
+    private fun displayDialog(title: String, msg: String) {
+        var builder = AlertDialog.Builder(this)
+        // Set the alert dialog title
+        builder.setTitle(title)
+        // Display a message on alert dialog
+        builder.setMessage(msg)
+        builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = positiveButtonClick))
+        // Finally, make the alert dialog using builder
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+        //   Toast.makeText(this@MainActivity, "invalid verification", Toast.LENGTH_SHORT).show()
     }
 }
