@@ -13,24 +13,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/giver_success"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
-                android:layout_marginLeft="35sp"
-                android:text="You can now start give items \nto others!!"
+                android:text="You can now start give \n items to others!!"
                 android:textColor="#000000"
                 android:textSize="25sp"
-                android:gravity="center_horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_gravity="center_horizontal"
+                android:lineSpacingExtra="20dp"
+                android:gravity="center"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
 
                 <TextView
@@ -44,8 +46,8 @@
                     android:text="Your selected pantry ID : "
                     android:textColor="#000000"
                     android:textSize="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_centerInParent="true" />
 
                 <TextView
                     android:id="@+id/pantry_title_id"
@@ -56,21 +58,21 @@
                     android:text="@string/pantry_id_description"
                     android:textColor="#000000"
                     android:textSize="20sp"
+
                     />
 
 
-                <Button
-                    android:id="@+id/signout_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="sign out"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="240dp"
-                    android:layout_marginLeft="150dp"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
             </RelativeLayout>
+
+            <Button
+                android:id="@+id/signout_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sign out"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="150dp"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"/>
 
         </LinearLayout>
 
