@@ -47,14 +47,12 @@ class MyAdapter(internal var context: MutableList<PantryEmpty>): RecyclerView.Ad
 //        }
     }
 
-    internal  var userList: List<PantryEmpty>
-    var pantryid = ""
-
-
-    init{
-        this.userList = ArrayList()
-
-    }
+//    internal  var userList: List<PantryEmpty>
+//
+//    init{
+//        this.userList = ArrayList()
+//
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_layout,parent,false)
