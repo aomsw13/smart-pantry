@@ -26,21 +26,20 @@
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/pantry_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:layout_marginStart="40dp"
-                android:layout_marginTop="100dp"
                 android:text="Pantry ID"
                 android:textColor="#000000"
                 android:textSize="30dp"
@@ -105,29 +104,55 @@
                 android:hint="Verification number"
                 android:inputType="number" />
 
+
+
+<!--                <Button-->
+<!--                    android:id="@+id/send_button"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                   -->
+<!--                    app:layout_constraintEnd_toStartOf="@+id/verify_button"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+
+<!--                    app:layout_anchorGravity="start|center" />-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/verify_button"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_anchorGravity="start|right"-->
+<!--                    android:layout_gravity="center_vertical"-->
+<!--                    app:layout_constraintStart_toEndOf="@+id/send_button"-->
+<!--                     />-->
+
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp">
                 <Button
                     android:id="@+id/send_button"
-                    android:layout_width="130dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
-                    android:layout_marginTop="30dp"
                     android:text="send code"
-                    app:layout_anchor="@+id/send_button"
-                    app:layout_anchorGravity="start|center" />
+                    tools:layout_editor_absoluteX="148dp"
+                    tools:layout_editor_absoluteY="92dp" />
 
                 <Button
                     android:id="@+id/verify_button"
-                    android:layout_width="130dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginLeft="30dp"
-                    android:text="verify" />
+                    android:text="verify"
+                    app:layout_constraintEnd_toStartOf="@+id/button2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:layout_editor_absoluteY="92dp"
+                    android:layout_marginStart="30dp"
+                    />
 
             </LinearLayout>
+
+
+
 
         </LinearLayout>
 
