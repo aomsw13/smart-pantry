@@ -10,7 +10,7 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="register_type">Register Type</string>
-    <string name="pantry_information">Pantry Information</string>
+    <string name="pantry_information">Empty Pantry Information</string>
     <string name="pantry_is_empty" />
     <string name="pantry_id">Pantry ID :</string>
     <string name="numberid">numberID</string>
