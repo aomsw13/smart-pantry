@@ -16,9 +16,10 @@ class GiverSelectPantryActivity : AppCompatActivity() {
     private lateinit var pantryID: TextView  //Textview is not EditText ()
     private lateinit var signoutButton: Button
 
+    //firebase
     private lateinit var mauth: FirebaseAuth
     private lateinit var myRef: DatabaseReference
-
+    var id: String = ""
 
     var TAG = "GiverSelectPantryActivity"
 
@@ -29,7 +30,10 @@ class GiverSelectPantryActivity : AppCompatActivity() {
         pantryID = findViewById(R.id.pantry_title_id)
         signoutButton = findViewById(R.id.signout_button)
         mauth = FirebaseAuth.getInstance()
+        id = mauth.currentUser?.uid.toString()
 
+        supportActionBar!!.title = "start giving"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         Log.d(TAG, "already changed page")
         getIncomingIntent()
@@ -38,7 +42,6 @@ class GiverSelectPantryActivity : AppCompatActivity() {
 
             startActivity(Intent(this, UserType::class.java))
             mauth.signOut()
-            startActivity(Intent(this, UserType::class.java))
 
         }
     }
@@ -59,7 +62,8 @@ class GiverSelectPantryActivity : AppCompatActivity() {
     }
 
     private fun storeIdToFirebase(pantryNumber: String) {
-        myRef = FirebaseDatabase.getInstance().getReference("Unique giver id").child(mauth.currentUser?.uid.toString())
+        Log.d(TAG, "mauthID "+ id)
+        myRef = FirebaseDatabase.getInstance().getReference("Unique giver id").child(id)
         myRef.child("pantry id").setValue(pantryNumber)
     }
 
