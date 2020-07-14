@@ -71,7 +71,7 @@ class MqttGiver(userType: UserType) : AppCompatActivity() {
                 if(receiveTopicPantryStatus == "empty"){
                     setValueToFirebase(receiveTopicPantryId.toString(), receiveTopicPantryStatus.toString())
                 }
-               else{
+               else if(receiveTopicPantryStatus == "full"){
                     removeValue(receiveTopicPantryId)
                 }
 
@@ -117,23 +117,26 @@ class MqttGiver(userType: UserType) : AppCompatActivity() {
 
     private fun removeValue(receiveTopicPantryId: String?) {
 
-        myRef = FirebaseDatabase.getInstance().getReference("Empty Pantry")
-        val oldItems: Query = myRef.child("pantryId").orderByChild(receiveTopicPantryId.toString())
-        Log.d(TAG, "ready to remove value $receiveTopicPantryId")
-        oldItems.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                throw error.toException();
-            }
+        myRef = FirebaseDatabase.getInstance().getReference("Empty Pantry").child("pantryId")
+        myRef.child(receiveTopicPantryId.toString()).removeValue()
+        Log.d(TAG, "already remove value $receiveTopicPantryId")
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d(TAG, "remove value $receiveTopicPantryId")
-                for (itemSnapshot in snapshot.children) {
-                    Log.d(TAG, "already remove value $receiveTopicPantryId")
-                    itemSnapshot.ref.removeValue()
-                }
-            }
-
-        })
+//        val oldItems: Query = myRef.child("pantryId").orderByChild(receiveTopicPantryId.toString())
+//        Log.d(TAG, "ready to remove value $receiveTopicPantryId")
+//        oldItems.addListenerForSingleValueEvent(object: ValueEventListener {
+//            override fun onCancelled(error: DatabaseError) {
+//                throw error.toException();
+//            }
+//
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                Log.d(TAG, "remove value $receiveTopicPantryId")
+//                for (itemSnapshot in snapshot.children) {
+//                    Log.d(TAG, "already remove value $receiveTopicPantryId")
+//                    itemSnapshot.ref.removeValue()
+//                }
+//            }
+//
+//        })
 
 
 //        myRef = FirebaseDatabase.getInstance().getReference("Empty Pantry").child("pantryId").child(receiveTopicPantryId.toString())
