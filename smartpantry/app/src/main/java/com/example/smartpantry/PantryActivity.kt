@@ -28,14 +28,6 @@ class PantryActivity() : AppCompatActivity(){
     private lateinit var textId: TextView
     private lateinit var textStatus: TextView
 
-    //firebase
-
-
-//    val mqttGiver: MqttGiver by lazy {
-//        MqttGiver(this@PantryActivity)
-//
-//    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +46,9 @@ class PantryActivity() : AppCompatActivity(){
 
         textId = findViewById(R.id.empty_pantryId)
         textStatus = findViewById(R.id.empty_pantryStatus)
+
+//        supportActionBar!!.title = "pantry list"
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 
 //        startMqtt()
