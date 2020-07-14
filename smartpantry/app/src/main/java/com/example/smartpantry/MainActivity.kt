@@ -50,16 +50,10 @@ open class MainActivity : AppCompatActivity() {
     private var check: Boolean = true
 
     //MQTT
-    //private var mqttClient: MqttClient = null
-
     val mqttClient: MqttClient by lazy {
         MqttClient(this)
 
     }
-
-    //User Type value from clicking button
-
-
 
 
     /*--positiveButtonClick -> pass the Button text along with a Kotlin function that’s triggered when that button is clicked.
@@ -82,8 +76,8 @@ open class MainActivity : AppCompatActivity() {
         send_button = findViewById(R.id.send_button)
         verify_button = findViewById(R.id.verify_button)
 
-        //mDatabase = FirebaseDatabase.getInstance().getReference("antry ID")
-
+        supportActionBar!!.title = "Taker"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         send_button.setOnClickListener { view: View? ->
             verify()
@@ -155,7 +149,7 @@ open class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "currentTimeStamp $currentTimestamp")
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
         val formatted = current.format(formatter)
-        id = auth.currentUser?.uid.toString()
+
 
         input_pantryID= pantryID.getText().toString()
 
@@ -165,24 +159,17 @@ open class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity, "login sucessful", Toast.LENGTH_SHORT)
                         .show()
 
-//                    val mIntent = Intent(this, PhoneActivity::class.java)
-//                    mIntent.putExtra("keyNo", input_phonenumber)
-//                    mIntent.putExtra("keyID", id)
-//                    startActivity(mIntent)
-
-                   // startActivity(Intent(this, PhoneActivity::class.java))
-                    val userButtonId= intent?.getStringExtra("userID")
-                    Log.d("MainActivity", "user type id $userButtonId")
-
-
+                        id = auth.currentUser?.uid.toString()
                         Log.d("MainActivity", "enter taker type")
 
-                        val mIntent = Intent(this, PhoneActivity::class.java)
+                        Log.d("MainActivity", "muath "+ id)
+
+                    val mIntent = Intent(this, PhoneActivity::class.java)
                         mIntent.putExtra("keyNo", input_phonenumber)
                         mIntent.putExtra("keyID", id)
                         startActivity(mIntent)
 
-                        myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(auth.currentUser?.uid.toString())
+                        myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id) //auth.currentUser?.uid.toString()
                         myRef.child("phonenumber").setValue(input_phonenumber)
                         //myRef.child("success").setValue("on")
                         myRef.child("date & time").setValue(formatted)
@@ -193,19 +180,18 @@ open class MainActivity : AppCompatActivity() {
                         myRef = FirebaseDatabase.getInstance().getReference("Pantry ID").child(input_pantryID)
                         myRef.push().child(input_phonenumber).setValue("on")
 
-
-
 //                    Handler().postDelayed({
 //                        Log.d("MainActivity", "current enter handle postDelay")
 //                        deleteFirebaseCallback()
 //                    }, 60000)
 
-
-
                 }
                 else{
                     Toast.makeText(this@MainActivity, "cannot login", Toast.LENGTH_SHORT)
                         .show()
+                    val title:String =  "Error"
+                    val msg:String = "Verification code is incorrect"
+                    displayDialog(title, msg)
                 }
             }
 
