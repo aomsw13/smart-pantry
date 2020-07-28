@@ -16,4 +16,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="MyTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/lightOrange</item>
+        <item name="colorPrimaryDark">@color/darkOrange</item>
+    </style>
+
+    <style name="MyGiverTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/lightGreen</item>
+        <item name="colorPrimaryDark">@color/darkGreen</item>
+    </style>
+
 </resources>
