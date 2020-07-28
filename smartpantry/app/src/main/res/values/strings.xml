@@ -9,12 +9,23 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="register_type">Register Type</string>
-    <string name="pantry_information">Empty Pantry Information</string>
+    <string name="register_type">โปรดระบุสถานะที่คุณต้องการ</string>
+    <string name="pantry_information">หมายเลขช่องของตู้ปันสุขที่ว่าง</string>
     <string name="pantry_is_empty" />
     <string name="pantry_id">Pantry ID :</string>
     <string name="numberid">numberID</string>
     <string name="pantry_status">Pantry Status :</string>
     <string name="status">status</string>
     <string name="pantry_id_description">Pantry ID</string>
+    <string name="giver_ready_give">คุณสามารถบริจาคของได้เลย!!</string>
+    <string name="giver_ready_pid">หมายเลขตู้ปันสุขที่คุณเลือก :</string>
+    <string name="sign_out">ลงชื่อออก</string>
+    <string name="pantry_id_taker">หมายเลขตู้ปันสุข</string>
+    <string name="phone_number">หมายเลขโทรศัพท์</string>
+    <string name="verification_code">รหัสการตรวจสอบยืนยัน</string>
+    <string name="send_code">กดรับรหัสยืนยัน</string>
+    <string name="verify">ยืนยันตัวตน</string>
+    <string name="taker_ready_take">คุณสามารถหยิบของจากตู้ปันสุขได้เลย!!</string>
+    <string name="taker">TAKER</string>
+    <string name="giver">GIVER</string>
 </resources>
