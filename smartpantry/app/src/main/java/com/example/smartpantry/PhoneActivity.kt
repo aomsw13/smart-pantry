@@ -81,9 +81,8 @@ open class PhoneActivity : MainActivity() {
         )
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager[AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                + 5 * 1000] = pendingIntent
-        Toast.makeText(this, "Alarm set in 30 seconds", Toast.LENGTH_LONG).show()
+        alarmManager[AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 60 * 1000] = pendingIntent
+        Toast.makeText(this, "Alarm set", Toast.LENGTH_LONG).show()
     }
 
 
