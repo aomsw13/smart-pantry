@@ -16,15 +16,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name="androidx.multidex.MultiDexApplication">
-        <activity android:name=".PhoneActivity" />
+        <activity android:name=".PhoneActivity"
+            android:theme="@style/MyTheme"/>
         <activity android:name=".GiverSelectPantryActivity"
-            android:parentActivityName=".PantryActivity"/>
+            android:parentActivityName=".PantryActivity"
+            android:theme="@style/MyGiverTheme"/>
         <activity android:name=".MainActivity"
-            android:parentActivityName=".UserType"/>
+            android:parentActivityName=".UserType"
+            android:theme="@style/MyTheme"/>
         <activity android:name=".PantryActivity"
-            android:parentActivityName=".MainActivityGiver"/>
+            android:parentActivityName=".MainActivityGiver"
+            android:theme="@style/MyGiverTheme"/>
         <activity android:name=".MainActivityGiver"
-            android:parentActivityName=".UserType"/>
+            android:parentActivityName=".UserType"
+            android:theme="@style/MyGiverTheme"/>
         <receiver android:name=".MyBroadcastReceiver"/>
 
         <activity
