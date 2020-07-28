@@ -19,7 +19,7 @@ class MyBroadcastReceiver : BroadcastReceiver()  {
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
-        Toast.makeText(context, "Alarm....", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "data is removed....", Toast.LENGTH_LONG).show()
         Log.d("MyBroadcastReceiver", "enter function deleteFirebase")
 
         val numPhone= intent?.getStringExtra(BOARDCAST_KEY_PHONE)
