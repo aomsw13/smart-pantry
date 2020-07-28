@@ -106,8 +106,7 @@ open class MainActivity : AppCompatActivity() {
 
         callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                Toast.makeText(this@MainActivity, "verification completed!!!!!!!"+ credential, Toast.LENGTH_SHORT)
-                    .show()
+                //Toast.makeText(this@MainActivity, "verification completed!!!!!!!"+ credential, Toast.LENGTH_SHORT).show()
                 //signin(credential)
             }
 
@@ -132,7 +131,7 @@ open class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "onCodesent "+s)
                 super.onCodeSent(s, forceResendingToken)
                 verificationCode = s.toString()
-                Toast.makeText(this@MainActivity, "Code sent", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MainActivity, "Code sent", Toast.LENGTH_SHORT).show()
 
             }
         }
@@ -156,8 +155,7 @@ open class MainActivity : AppCompatActivity() {
             auth.signInWithCredential(credential).addOnCompleteListener{
                 if(it.isSuccessful){
 
-                    Toast.makeText(this@MainActivity, "login sucessful", Toast.LENGTH_SHORT)
-                        .show()
+                    //Toast.makeText(this@MainActivity, "login sucessful", Toast.LENGTH_SHORT) .show()
 
                         id = auth.currentUser?.uid.toString()
                         Log.d("MainActivity", "enter taker type")
@@ -171,14 +169,14 @@ open class MainActivity : AppCompatActivity() {
 
                         myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id) //auth.currentUser?.uid.toString()
                         myRef.child("phonenumber").setValue(input_phonenumber)
-                        //myRef.child("success").setValue("on")
+                        myRef.child("success").setValue("on")
                         myRef.child("date & time").setValue(formatted)
                         myRef.child("timestamp").setValue(currentTimestamp)
                         myRef.child("pantry id").setValue(input_pantryID)
 
 
                         myRef = FirebaseDatabase.getInstance().getReference("Pantry ID").child(input_pantryID)
-                        myRef.push().child(input_phonenumber).setValue("on")
+                        myRef.push().child(input_phonenumber).setValue(formatted)
 
 //                    Handler().postDelayed({
 //                        Log.d("MainActivity", "current enter handle postDelay")
@@ -187,8 +185,7 @@ open class MainActivity : AppCompatActivity() {
 
                 }
                 else{
-                    Toast.makeText(this@MainActivity, "cannot login", Toast.LENGTH_SHORT)
-                        .show()
+                   // Toast.makeText(this@MainActivity, "cannot login", Toast.LENGTH_SHORT) .show()
                     val title:String =  "Error"
                     val msg:String = "Verification code is incorrect"
                     displayDialog(title, msg)
@@ -220,7 +217,7 @@ open class MainActivity : AppCompatActivity() {
                     val msg:String = "You already have sent request to system"
                     displayDialog(title, msg)
 
-                    Toast.makeText(this@MainActivity, "exist", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this@MainActivity, "exist", Toast.LENGTH_SHORT).show()
                 }
                 else{
                     check = true
@@ -230,8 +227,7 @@ open class MainActivity : AppCompatActivity() {
                     val title:String =  "Notification"
                     val msg:String = "verification code has been sent to your mobile phone "
                     displayDialog(title, msg)
-                    Toast.makeText(this@MainActivity, "not exist", Toast.LENGTH_SHORT)
-                        .show()
+                    //Toast.makeText(this@MainActivity, "not exist", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -252,14 +248,13 @@ open class MainActivity : AppCompatActivity() {
 
     private fun authenticate() {
 
-        Toast.makeText(this@MainActivity, "checl code"+verificationCode, Toast.LENGTH_SHORT)
-            .show()
+       // Toast.makeText(this@MainActivity, "checl code"+verificationCode, Toast.LENGTH_SHORT).show()
         //phone number does not exist and verification vode is sent
         if(check == true){
             val input_code:String = codeID.getText().toString()
             val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(verificationCode, input_code)
             signin(credential)
-            Toast.makeText(this@MainActivity, "verify" + credential, Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this@MainActivity, "verify" + credential, Toast.LENGTH_SHORT).show()
         }
         //phone number already exist
         else if(check == false){
