@@ -45,8 +45,7 @@ class MainActivityGiver : AppCompatActivity() {
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
     val positiveButtonClick = { dialog: DialogInterface, which: Int ->
-        Toast.makeText(this,
-            android.R.string.yes, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, android.R.string.yes, Toast.LENGTH_SHORT).show()
     }
 
 
@@ -61,11 +60,14 @@ class MainActivityGiver : AppCompatActivity() {
         send_button = findViewById(R.id.send_button_giver)
         verify_button = findViewById(R.id.verify_button_giver)
 
+
         supportActionBar!!.title = "Giver"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+
         send_button.setOnClickListener { view: View? ->
             verify()
+
         }
 
         verify_button.setOnClickListener { view: View? ->
@@ -102,8 +104,7 @@ class MainActivityGiver : AppCompatActivity() {
         auth.signInWithCredential(credential).addOnCompleteListener{
             if(it.isSuccessful){
 
-                Toast.makeText(this@MainActivityGiver, "login sucessful", Toast.LENGTH_SHORT)
-                    .show()
+               // Toast.makeText(this@MainActivityGiver, "login sucessful", Toast.LENGTH_SHORT).show()
                 val userButtonId= intent?.getStringExtra("userID")
                 Log.d("MainActivityGiver", "user type id $userButtonId")
 
@@ -123,8 +124,7 @@ class MainActivityGiver : AppCompatActivity() {
 
             }
             else{
-                Toast.makeText(this@MainActivityGiver, "cannot login", Toast.LENGTH_SHORT)
-                    .show()
+                //Toast.makeText(this@MainActivityGiver, "cannot login", Toast.LENGTH_SHORT).show()
                 val title:String =  "Error"
                 val msg:String = "Verification code is incorrect"
                 displayDialog(title, msg)
@@ -137,13 +137,12 @@ class MainActivityGiver : AppCompatActivity() {
 
         callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                Toast.makeText(this@MainActivityGiver, "verification completed!!!!!!!"+ credential, Toast.LENGTH_SHORT)
-                    .show()
+                //Toast.makeText(this@MainActivityGiver, "verification completed!!!!!!!"+ credential, Toast.LENGTH_SHORT).show()
                 //signin(credential)
             }
 
             override fun onVerificationFailed(e: FirebaseException) {
-                Toast.makeText(this@MainActivityGiver, "verification fialed" + e, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MainActivityGiver, "verification fialed" + e, Toast.LENGTH_SHORT).show()
                 // This callback is invoked in an invalid request for verification is made,
                 // for instance if the the phone number format is not valid.
 
@@ -164,7 +163,7 @@ class MainActivityGiver : AppCompatActivity() {
                 super.onCodeSent(s, forceResendingToken)
                 verificationCode = s.toString()
                 Log.d("MainActivityGiver", "verificationCode $verificationCode")
-                Toast.makeText(this@MainActivityGiver, "Code sent", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this@MainActivityGiver, "Code sent", Toast.LENGTH_SHORT).show()
 
             }
         }
@@ -176,6 +175,10 @@ class MainActivityGiver : AppCompatActivity() {
         input_phonenumber = phonenumber.text.toString()
         verificationcallback()
         sendverificationNumber(input_phonenumber)
+        val title:String =  "Notification"
+        val msg:String = "verification code has been sent to your mobile phone "
+        displayDialog(title, msg)
+
     }
 
     private fun sendverificationNumber(inputPhonenumber: String) {
