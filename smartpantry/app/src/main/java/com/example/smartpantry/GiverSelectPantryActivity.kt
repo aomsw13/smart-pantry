@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import helpers.MqttGiver
 
 class GiverSelectPantryActivity : AppCompatActivity() {
 
@@ -23,6 +24,7 @@ class GiverSelectPantryActivity : AppCompatActivity() {
 
     var TAG = "GiverSelectPantryActivity"
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_giverselectpantry)
@@ -34,6 +36,7 @@ class GiverSelectPantryActivity : AppCompatActivity() {
 
         supportActionBar!!.title = "start giving"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
 
         Log.d(TAG, "already changed page")
         getIncomingIntent()
