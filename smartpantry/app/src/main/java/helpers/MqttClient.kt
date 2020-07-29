@@ -45,8 +45,8 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
 
                     val ref = FirebaseDatabase.getInstance().reference.child("Unique sender id").child(idUserTaker.toString())
                     val updates: MutableMap<String, Any> = HashMap()
-                    updates["success"] = "off after"
-                    ref.updateChildren(updates)
+                    //updates["success"] = "off after"
+                    //ref.updateChildren(updates)
                     unsubscribe(subscriptionTopic.toString())
 
                 }
