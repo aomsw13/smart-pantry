@@ -28,6 +28,11 @@ class PantryActivity() : AppCompatActivity(){
     private lateinit var textId: TextView
     private lateinit var textStatus: TextView
 
+    val mqttGiver: MqttGiver by lazy {
+        MqttGiver(this)
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +56,7 @@ class PantryActivity() : AppCompatActivity(){
 //        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 
-//        startMqtt()
+        startMqtt()
 //        setValueToFirebase(mqttGiver.receiveTopicPantryId, mqttGiver.receiveTopicPantryStatus)
 
         fetchData(object: PantryCallback {
@@ -117,17 +122,17 @@ class PantryActivity() : AppCompatActivity(){
 //
 //    }
 //
-//    private fun startMqtt() {
-//        mqttGiver.connect(this.applicationContext)
-////        mqttGiver.publishTopic = "pantry/ $input_pantryID /statusBefore"
-//        mqttGiver.subscriptionTopicPantryId = "pantry/+/emptyPantryId"
-//        mqttGiver.subscriptionTopicPantryStatus = "pantry/+/emptyPantryStatus"
-////        mqttGiver.publishTextMessage = "open"
-//        Log.d("FETCHING", "startMqtt")
-//
-//
-//
-//    }
+    private fun startMqtt() {
+        mqttGiver.connect(this.applicationContext)
+        mqttGiver.publishTopic = "pantry/statusBefore"
+        mqttGiver.subscriptionTopicPantryId = "pantry/+/emptyPantryId"
+        mqttGiver.subscriptionTopicPantryStatus = "pantry/+/emptyPantryStatus"
+        mqttGiver.publishTextMessage = "open"
+        Log.d("FETCHING", "startMqtt")
+
+
+
+    }
 
 
 }
