@@ -94,11 +94,9 @@ open class MainActivity : AppCompatActivity() {
 
     private fun startMqtt() {
         mqttClient.connect(this.applicationContext)
-        mqttClient.publishTopic = "pantry/ $input_pantryID /statusBefore"
-        mqttClient.subscriptionTopic = "pantry/ $input_pantryID /statusAfter"
+        mqttClient.publishTopic = "pantry/$input_pantryID/statusBefore"
+        mqttClient.subscriptionTopic = "pantry/$input_pantryID/statusAfter"
         mqttClient.publishTextMessage = "open"
-
-
     }
 
 
@@ -169,7 +167,7 @@ open class MainActivity : AppCompatActivity() {
 
                         myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id) //auth.currentUser?.uid.toString()
                         myRef.child("phonenumber").setValue(input_phonenumber)
-                        myRef.child("success").setValue("on")
+                        //myRef.child("success").setValue("on")
                         myRef.child("date & time").setValue(formatted)
                         myRef.child("timestamp").setValue(currentTimestamp)
                         myRef.child("pantry id").setValue(input_pantryID)
