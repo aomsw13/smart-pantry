@@ -15,10 +15,10 @@ class UserType : AppCompatActivity() {
     private lateinit var takerButton: Button
     private lateinit var giverButton: Button
 
-    val mqttGiver: MqttGiver by lazy {
-        MqttGiver(this)
-
-    }
+//    val mqttGiver: MqttGiver by lazy {
+//        MqttGiver(this)
+//
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,20 +40,21 @@ class UserType : AppCompatActivity() {
             val mIntent = Intent(this, MainActivityGiver::class.java)
 //            mIntent.putExtra("userID", "0")
             startActivity(mIntent)
-            startMqtt()
+           // startMqtt()
 
 
         }
     }
 
-    private fun startMqtt() {
-        mqttGiver.connect(this.applicationContext)
-        mqttGiver.subscriptionTopicPantryId = "pantry/+/emptyPantryId"
-        mqttGiver.subscriptionTopicPantryStatus = "pantry/+/emptyPantryStatus"
-        mqttGiver.publishTextMessage = "open"
-        Log.d("FETCHING", "startMqtt")
-        //setValueToFirebase(mqttGiver.receiveTopicPantryId.toString(), mqttGiver.receiveTopicPantryStatus)
-    }
+//    private fun startMqtt() {
+//        mqttGiver.connect(this.applicationContext)
+//        mqttGiver.subscriptionTopicPantryId = "pantry/+/emptyPantryId"
+//        mqttGiver.subscriptionTopicPantryStatus = "pantry/+/emptyPantryStatus"
+//        mqttGiver.publishTopic = "pantry/+/statusGiver"
+//        mqttGiver.publishTextMessage = "open"
+//        Log.d("FETCHING", "startMqtt")
+//        //setValueToFirebase(mqttGiver.receiveTopicPantryId.toString(), mqttGiver.receiveTopicPantryStatus)
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
