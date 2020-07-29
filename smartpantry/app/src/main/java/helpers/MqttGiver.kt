@@ -5,6 +5,8 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartpantry.Adapter.MyAdapter
+import com.example.smartpantry.GiverSelectPantryActivity
+import com.example.smartpantry.PantryActivity
 import com.example.smartpantry.PhoneActivity
 import com.example.smartpantry.UserType
 import com.google.firebase.auth.FirebaseAuth
@@ -13,7 +15,7 @@ import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
 
-class MqttGiver(userType: UserType) : AppCompatActivity() {
+class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
 
     private lateinit var mqttClient: MqttAndroidClient
     // TAG
@@ -97,10 +99,11 @@ class MqttGiver(userType: UserType) : AppCompatActivity() {
             mqttClient.connect(options, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG, "Connection success")
-                   // publishMessage()
+//                    publishMessage()
                     Handler().postDelayed({
                         Log.d("MqttClient", "current enter handle postDelay")
                         subscribeTopic()
+                        publishMessage()
                     }, 5000)
 
                 }
