@@ -14,6 +14,7 @@ import java.util.*
 
 class MyBroadcastReceiver : BroadcastReceiver()  {
 
+    //firebase
     private lateinit var myRef: DatabaseReference
     private lateinit var auth: FirebaseAuth
 
@@ -33,16 +34,18 @@ class MyBroadcastReceiver : BroadcastReceiver()  {
 
 
         val cutoff: Long = Date().getTime()
+
         Log.d("MyBroadcastReceiver", "enter date.getTime ${Date().getTime()} ")
         Log.d("MyBroadcastReceiver", "enter cut off ${cutoff.toString()}")
+
         myRef = FirebaseDatabase.getInstance().getReference("Unique sender id")
+
         val oldItems: Query = myRef.child(numID.toString()).orderByChild("timestamp").endAt(cutoff.toDouble())
         Log.d("MyBroadcastReceiver", "enter oldItems ${oldItems.toString()}")
         oldItems.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 throw error.toException();
             }
-
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.d("MyBroadcastReceiver", "enter current itemSnapshot")
                 for (itemSnapshot in snapshot.children) {
@@ -50,26 +53,6 @@ class MyBroadcastReceiver : BroadcastReceiver()  {
                     itemSnapshot.ref.removeValue()
                 }
             }
-
         })
-
-//        val applesQuery = ref.child(numID.toString()).orderByChild("phonenumber").equalTo(numPhone)
-//        applesQuery.addListenerForSingleValueEvent(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                Log.d("MyBroadcastReceiver", "enter ready delete")
-//                for (appleSnapshot in dataSnapshot.children) {
-//                    Log.d("MyBroadcastReceiver", "enter ready delete")
-//                    appleSnapshot.ref.removeValue()
-//                }
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                Log.e("Mybroadcast", "onCancelled", databaseError.toException())
-//            }
-//        })
     }
-
-
-
-
 }
