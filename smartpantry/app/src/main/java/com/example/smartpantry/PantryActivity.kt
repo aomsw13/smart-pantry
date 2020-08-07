@@ -119,7 +119,7 @@ class PantryActivity() : AppCompatActivity(){
 //    }
 //
     // to subscribe and publish information between android and mobile device
-    // using topic wild cards : + which is a single level wildcard
+    // using topic wild cards : + which is a single level wildcard so plus sign(+) will be replaced with any number
     private fun startMqtt() {
         mqttGiver.connect(this.applicationContext)
         mqttGiver.publishTopic = "pantry/statusBefore"
