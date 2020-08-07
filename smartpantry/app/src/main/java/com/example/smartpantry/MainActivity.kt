@@ -40,16 +40,16 @@ open class MainActivity : AppCompatActivity() {
     var input_pantryID: String = ""
     var input_phonenumber:String = ""
 
-    //firebase
+    // firebase
     private lateinit var myRef: DatabaseReference // = FirebaseDatabase.getInstance().getReference()  //point to the root named "penquiz3d349"
     private lateinit var auth: FirebaseAuth
     var id: String = ""
 
-    //phoen number
+    // phoen number
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private var check: Boolean = true
 
-    //MQTT
+    // MQTT
     val mqttClient: MqttClient by lazy {
         MqttClient(this)
 
@@ -68,7 +68,7 @@ open class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        setSupportActionBar(findViewById(R.id.toolbar))
+
         auth = FirebaseAuth.getInstance()
         pantryID = findViewById(R.id.pantry_id)
         phonenumber = findViewById(R.id.phone_id)
@@ -76,22 +76,24 @@ open class MainActivity : AppCompatActivity() {
         send_button = findViewById(R.id.send_button)
         verify_button = findViewById(R.id.verify_button)
 
+        // title name on of each interface
         supportActionBar!!.title = "Taker"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        // button to get verification code
         send_button.setOnClickListener { view: View? ->
             verify()
         }
 
+        // button to sign in after get verification code
         verify_button.setOnClickListener { view: View? ->
             authenticate()
             startMqtt()
-
         }
-
 
     }
 
+    // to subscribe and publish information between android and mobile device
     private fun startMqtt() {
         mqttClient.connect(this.applicationContext)
         mqttClient.publishTopic = "pantry/$input_pantryID/statusBefore"
@@ -100,6 +102,7 @@ open class MainActivity : AppCompatActivity() {
     }
 
 
+    // call back function that handle the result of the request
     private fun verificationcallback(){
 
         callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -135,15 +138,17 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
+    // navigate user to next interface after user successfully sign in
     private fun signin(credential: PhoneAuthCredential) {
 
-        val currentTimestamp = Date().getTime()
+        val currentTimestamp = Date().getTime()  //get current timestamp
         val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             LocalDateTime.now()
         } else {
             TODO("VERSION.SDK_INT < O")
         }
         Log.d("MainActivity", "currentTimeStamp $currentTimestamp")
+        // format timestamp to specific format : Aug 3, 2020, 9:47:46 AM
         val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
         val formatted = current.format(formatter)
 
@@ -155,35 +160,32 @@ open class MainActivity : AppCompatActivity() {
 
                     //Toast.makeText(this@MainActivity, "login sucessful", Toast.LENGTH_SHORT) .show()
 
-                        id = auth.currentUser?.uid.toString()
-                        Log.d("MainActivity", "enter taker type")
+                    id = auth.currentUser?.uid.toString()//user id when user sign in
 
-                        Log.d("MainActivity", "muath "+ id)
+                    Log.d("MainActivity", "enter taker type")
+                    Log.d("MainActivity", "muath "+ id)
 
+                    // to start new activity when user successfully signin
                     val mIntent = Intent(this, PhoneActivity::class.java)
-                        mIntent.putExtra("keyNo", input_phonenumber)
-                        mIntent.putExtra("keyID", id)
-                        startActivity(mIntent)
+                    mIntent.putExtra("keyNo", input_phonenumber)
+                    mIntent.putExtra("keyID", id)
+                    startActivity(mIntent)
 
-                        myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id) //auth.currentUser?.uid.toString()
-                        myRef.child("phonenumber").setValue(input_phonenumber)
-                        //myRef.child("success").setValue("on")
-                        myRef.child("date & time").setValue(formatted)
-                        myRef.child("timestamp").setValue(currentTimestamp)
-                        myRef.child("pantry id").setValue(input_pantryID)
+                    // store information of takers to firebase
+                    myRef = FirebaseDatabase.getInstance().getReference("Unique sender id").child(id)
+                    myRef.child("phonenumber").setValue(input_phonenumber)
+                    myRef.child("date & time").setValue(formatted)
+                    myRef.child("timestamp").setValue(currentTimestamp)
+                    myRef.child("pantry id").setValue(input_pantryID)
 
-
-                        myRef = FirebaseDatabase.getInstance().getReference("Pantry ID").child(input_pantryID)
-                        myRef.push().child(input_phonenumber).setValue(formatted)
-
-//                    Handler().postDelayed({
-//                        Log.d("MainActivity", "current enter handle postDelay")
-//                        deleteFirebaseCallback()
-//                    }, 60000)
+                    // store information of pantry that takers request to firebase
+                    myRef = FirebaseDatabase.getInstance().getReference("Pantry ID").child(input_pantryID)
+                    myRef.push().child(input_phonenumber).setValue(formatted)
 
                 }
                 else{
                    // Toast.makeText(this@MainActivity, "cannot login", Toast.LENGTH_SHORT) .show()
+                    // display pop up window when user cannot sign in to the system
                     val title:String =  "Error"
                     val msg:String = "Verification code is incorrect"
                     displayDialog(title, msg)
@@ -192,15 +194,13 @@ open class MainActivity : AppCompatActivity() {
 
     }
 
-
-
+    // to check phone number callback
     private fun verify() {
-
         input_phonenumber = phonenumber.text.toString()
         checkPhoneNumbercallback(input_phonenumber)
-
     }
 
+    // to check that user has sent a request to open a door
     private fun checkPhoneNumbercallback(inputPhonenumber: String) {
         myRef = FirebaseDatabase.getInstance().getReference("Unique sender id")
         myRef.keepSynced(true)
@@ -214,26 +214,22 @@ open class MainActivity : AppCompatActivity() {
                     val title:String =  "Error"
                     val msg:String = "You already have sent request to system"
                     displayDialog(title, msg)
-
                     //Toast.makeText(this@MainActivity, "exist", Toast.LENGTH_SHORT).show()
                 }
                 else{
                     check = true
                     verificationcallback()
                     sendverificationNumber(inputPhonenumber)
-
                     val title:String =  "Notification"
                     val msg:String = "verification code has been sent to your mobile phone "
                     displayDialog(title, msg)
                     //Toast.makeText(this@MainActivity, "not exist", Toast.LENGTH_SHORT).show()
                 }
             }
-
-
         })
     }
 
-
+    // send verification code to the user's phone
     private fun sendverificationNumber(inputPhonenumber: String) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
             inputPhonenumber,                     // Phone number to verify
@@ -241,29 +237,28 @@ open class MainActivity : AppCompatActivity() {
             TimeUnit.SECONDS,                // Unit of timeout
             this,        // Activity (for callback binding)
             callbacks)
-
     }
 
+    // to check that user input verification code correctly
     private fun authenticate() {
+        // Toast.makeText(this@MainActivity, "checl code"+verificationCode, Toast.LENGTH_SHORT).show()
 
-       // Toast.makeText(this@MainActivity, "checl code"+verificationCode, Toast.LENGTH_SHORT).show()
-        //phone number does not exist and verification vode is sent
+        // phone number does not exist and verification vode is sent
         if(check == true){
             val input_code:String = codeID.getText().toString()
             val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(verificationCode, input_code)
             signin(credential)
-           // Toast.makeText(this@MainActivity, "verify" + credential, Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@MainActivity, "verify" + credential, Toast.LENGTH_SHORT).show()
         }
-        //phone number already exist
+        // phone number already exist
         else if(check == false){
-
             val title:String =  "Error"
             val msg:String = "You cannot sign in"
             displayDialog(title, msg)
         }
-
     }
 
+    // to display dialog once user click a button
     private fun displayDialog(title: String, msg: String) {
         var builder = AlertDialog.Builder(this)
         // Set the alert dialog title
@@ -274,10 +269,8 @@ open class MainActivity : AppCompatActivity() {
         // Finally, make the alert dialog using builder
         val dialog: AlertDialog = builder.create()
         dialog.show()
-     //   Toast.makeText(this@MainActivity, "invalid verification", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this@MainActivity, "invalid verification", Toast.LENGTH_SHORT).show()
     }
-
-
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
