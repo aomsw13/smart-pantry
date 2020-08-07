@@ -4,24 +4,24 @@ import android.content.Context
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.smartpantry.Adapter.MyAdapter
-import com.example.smartpantry.GiverSelectPantryActivity
 import com.example.smartpantry.PantryActivity
 import com.example.smartpantry.PhoneActivity
-import com.example.smartpantry.UserType
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
+// This class will establish MQTT connection between android mobile application(Giver Part) and IoT devices(load cell)
 
 class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
 
     private lateinit var mqttClient: MqttAndroidClient
+
     // TAG
     companion object {
         const val TAG = "AndroidMqttClient"
     }
+
     var subscriptionTopicPantryId: String? = null
     var subscriptionTopicPantryStatus: String? = null
     var publishTopic: String? = null
@@ -29,23 +29,18 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
     var receiveMessage: String? = null
     private lateinit var auth: FirebaseAuth
 
-
     //send pantry id and status to PantryActivity.kt
     var receiveTopicPantryId: String? = null
     var receiveTopicPantryStatus: String? = null
 
+    //to check that value received from Mqtt is numerical
     var numeric = true
-
 
     //firebase
     private lateinit var myRef: DatabaseReference // = FirebaseDatabase.getInstance().getReference()  //point to the root named "penquiz3d349"
 
 
-
-    private lateinit var phoneActivity: PhoneActivity
-
-
-
+    // a function that allow user's android mobile application connect to MQTT protocol
     fun connect(context: Context) {
         val serverURI = "tcp://broker.emqx.io:1883"
         mqttClient = MqttAndroidClient(context.applicationContext, serverURI, "kotlin_client")
@@ -59,7 +54,7 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
                     Log.d(TAG, "Receive numerical message: ${message.toString()} from topic: $topic")
                     receiveTopicPantryId = message.toString()
                     Log.d(TAG, "Receive numerical message and ready to send: ${receiveTopicPantryId} from topic: $topic")
-                  //  unsubscribe(subscriptionTopicPantryId.toString())
+                    //unsubscribe(subscriptionTopicPantryId.toString())
 
                 }
                 //string is not numerical
@@ -67,7 +62,7 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
                     Log.d(TAG, "Receive string message: ${message.toString()} from topic: $topic")
                     receiveTopicPantryStatus = message.toString()
                     Log.d(TAG, "Receive string message and ready to send: ${receiveTopicPantryStatus} from topic: $topic")
-                   // unsubscribe(subscriptionTopicPantryStatus.toString())
+                    //unsubscribe(subscriptionTopicPantryStatus.toString())
                 }
 
                 if(receiveTopicPantryStatus == "empty"){
@@ -118,49 +113,26 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
 
     }
 
+    // in case that pantry is not empty(load cell return's value is not zero), the pantry id is removed from firebase
     private fun removeValue(receiveTopicPantryId: String?) {
 
         myRef = FirebaseDatabase.getInstance().getReference("Empty Pantry").child("pantryId")
         myRef.child(receiveTopicPantryId.toString()).removeValue()
         Log.d(TAG, "already remove value $receiveTopicPantryId")
 
-//        val oldItems: Query = myRef.child("pantryId").orderByChild(receiveTopicPantryId.toString())
-//        Log.d(TAG, "ready to remove value $receiveTopicPantryId")
-//        oldItems.addListenerForSingleValueEvent(object: ValueEventListener {
-//            override fun onCancelled(error: DatabaseError) {
-//                throw error.toException();
-//            }
-//
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                Log.d(TAG, "remove value $receiveTopicPantryId")
-//                for (itemSnapshot in snapshot.children) {
-//                    Log.d(TAG, "already remove value $receiveTopicPantryId")
-//                    itemSnapshot.ref.removeValue()
-//                }
-//            }
-//
-//        })
-
-
-//        myRef = FirebaseDatabase.getInstance().getReference("Empty Pantry").child("pantryId").child(receiveTopicPantryId.toString())
-//        myRef.child(receiveTopicPantryId.toString()).removeValue();
     }
 
+    // in case that pantry is empty(load cell return's value is zero), the pantry id will be stored in firebase
     private fun setValueToFirebase(receiveTopicPantryId: String?, receiveTopicPantryStatus: String?) {
-
-        // Log.d("FETCHING", "receiveValue $receiveTopicPantryId")
 
         myRef = FirebaseDatabase.getInstance().getReference("Empty Pantry").child("pantryId").child(receiveTopicPantryId.toString())
         myRef.child("pantryID").setValue(receiveTopicPantryId)
         myRef.child("status").setValue(receiveTopicPantryStatus)
 
-
-        Log.d("FETCHING", "value $receiveTopicPantryId $receiveTopicPantryStatus")
-        Log.d("FETCHING", "setValueToFirebase")
-
     }
 
 
+    // publish information from android mobile application to cloudMqtt with specific topic
     fun publishMessage( qos: Int = 1, retained: Boolean = false) {
 
         try {
@@ -180,9 +152,9 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
         } catch (e: MqttException) {
             e.printStackTrace()
         }
-
     }
 
+    // subscribe information from IoT device with specific topic
     fun subscribeTopic() {
 //        try {
 //            mqttClient.subscribe(topic, qos, null, object : IMqttActionListener {
@@ -240,6 +212,7 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
         }
     }
 
+    // stop establishing Mqtt connection
     fun unsubscribe(topic: String) {
         try {
             mqttClient.unsubscribe(topic, null, object : IMqttActionListener {
