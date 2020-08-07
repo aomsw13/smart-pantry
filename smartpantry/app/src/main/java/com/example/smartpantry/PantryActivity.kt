@@ -17,22 +17,23 @@ import helpers.MqttGiver
 
 class PantryActivity() : AppCompatActivity(){
 
+    // display information in recycleview
     private lateinit var mRecycleView: RecyclerView
-    private lateinit var database: FirebaseDatabase
-    private lateinit var resultRef: DatabaseReference
     private lateinit var mQueryCurrent: Query
-   // private lateinit var options : FirebaseRecyclerOptions<PantryEmpty>
     private lateinit var dataList : MutableList<PantryEmpty> // To keep Quizes object retrieve from database
     private lateinit var pantryAdapter: MyAdapter
-    private lateinit var user: FirebaseUser
     private lateinit var textId: TextView
     private lateinit var textStatus: TextView
 
+    //firebae
+    private lateinit var database: FirebaseDatabase
+    private lateinit var resultRef: DatabaseReference
+    private lateinit var user: FirebaseUser
+
+    // MQTT
     val mqttGiver: MqttGiver by lazy {
         MqttGiver(this)
-
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,23 +60,19 @@ class PantryActivity() : AppCompatActivity(){
         startMqtt()
 //        setValueToFirebase(mqttGiver.receiveTopicPantryId, mqttGiver.receiveTopicPantryStatus)
 
+        // fetch data from firebase to display in recycleview
         fetchData(object: PantryCallback {
             override fun onCallBack(pantries: List<PantryEmpty>) {
                 dataList = pantries as MutableList<PantryEmpty>
                 mRecycleView.adapter = pantryAdapter
                 pantryAdapter.notifyDataSetChanged()
                 Log.d("FETCHING", "Successfully retreive history to dataList")
-
             }
         })
-
-
     }
 
     private fun fetchData(callback: PantryCallback) {
         //fetching data from database
-
-
         database = FirebaseDatabase.getInstance()
         resultRef = database.getReference()
         resultRef.child("Empty Pantry").addValueEventListener(object: ValueEventListener{
@@ -96,7 +93,6 @@ class PantryActivity() : AppCompatActivity(){
 
                 }
             callback.onCallBack(dataList)
-
 
             }
 
@@ -122,6 +118,8 @@ class PantryActivity() : AppCompatActivity(){
 //
 //    }
 //
+    // to subscribe and publish information between android and mobile device
+    // using topic wild cards : + which is a single level wildcard
     private fun startMqtt() {
         mqttGiver.connect(this.applicationContext)
         mqttGiver.publishTopic = "pantry/statusBefore"
@@ -129,9 +127,6 @@ class PantryActivity() : AppCompatActivity(){
         mqttGiver.subscriptionTopicPantryStatus = "pantry/+/emptyPantryStatus"
         mqttGiver.publishTextMessage = "open"
         Log.d("FETCHING", "startMqtt")
-
-
-
     }
 
 
