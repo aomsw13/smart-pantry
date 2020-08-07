@@ -1,9 +1,7 @@
 package com.example.smartpantry
 
-import android.R.attr.key
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -16,7 +14,9 @@ import com.google.firebase.auth.FirebaseAuth
 
 open class PhoneActivity : MainActivity() {
 
+    //firebase
     private lateinit var mauth: FirebaseAuth
+
     private lateinit var signout_button: Button
 
 
@@ -28,24 +28,21 @@ open class PhoneActivity : MainActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phone)
-//        setSupportActionBar(findViewById(R.id.toolbar))
-
-
+        //setSupportActionBar(findViewById(R.id.toolbar))
 
         signout_button = findViewById(R.id.signout_button)
         mauth = FirebaseAuth.getInstance()
 
-        signout_button.setOnClickListener { view: View? ->
 
+        signout_button.setOnClickListener { view: View? ->
             startAlert()
             startActivity(Intent(this, UserType::class.java))
             mauth.signOut()
-          //  mauth.signOut()
-//            startActivity(Intent(this, ReadyToDelete::class.java))
-//            Toast.makeText(this, "logout success", Toast.LENGTH_SHORT)
-//                .show()
 
-
+            //mauth.signOut()
+            //startActivity(Intent(this, ReadyToDelete::class.java))
+            //Toast.makeText(this, "logout success", Toast.LENGTH_SHORT)
+            //.show()
         }
 
 
@@ -80,9 +77,11 @@ open class PhoneActivity : MainActivity() {
             this.applicationContext, 234324243, intent, 0
         )
 
+        // set alarm to remove data from firebase after 1 minute pass so taker can request to opem a door in the next day
+        // Noted that setting 1 minute for testing
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager[AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 60 * 1000] = pendingIntent
-        Toast.makeText(this, "Alarm set", Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, "Alarm set", Toast.LENGTH_LONG).show()
     }
 
 
