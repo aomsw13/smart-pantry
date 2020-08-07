@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import helpers.MqttGiver
+
+
+// this class will display giver's information and selected pantry after giver select pantry id from recyclerview
 
 class GiverSelectPantryActivity : AppCompatActivity() {
 
@@ -22,8 +24,8 @@ class GiverSelectPantryActivity : AppCompatActivity() {
     private lateinit var myRef: DatabaseReference
     var id: String = ""
 
+    // TAG
     var TAG = "GiverSelectPantryActivity"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,21 +36,21 @@ class GiverSelectPantryActivity : AppCompatActivity() {
         mauth = FirebaseAuth.getInstance()
         id = mauth.currentUser?.uid.toString()
 
+        // title name on of each interface
         supportActionBar!!.title = "start giving"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-
-        Log.d(TAG, "already changed page")
+        //call getIncomingIntent function
         getIncomingIntent()
 
+        // button that allow giver to click sign out after giver successfully sign in
         signoutButton.setOnClickListener { view: View? ->
-
             startActivity(Intent(this, UserType::class.java))
             mauth.signOut()
-
         }
     }
 
+    // function aims to get selected pantry id from giver who select id from recyclerview
     private fun getIncomingIntent(){
         Log.d(TAG, "get incomingIntent : cheking for incoming intent")
         if(getIntent().hasExtra("pantryIdAdapter")){
@@ -58,12 +60,14 @@ class GiverSelectPantryActivity : AppCompatActivity() {
         }
     }
 
+    //set and display selected pantry id
     private fun setPantryIdDescription(pantryNumber: String){
         Log.d(TAG, "setting pantry id description")
         pantryID.setText(pantryNumber)
         storeIdToFirebase(pantryNumber)
     }
 
+    //store giver's selected pantry in firebases
     private fun storeIdToFirebase(pantryNumber: String) {
         Log.d(TAG, "mauthID "+ id)
         myRef = FirebaseDatabase.getInstance().getReference("Unique giver id").child(id)
