@@ -102,7 +102,6 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
                     }, 5000)
 
                 }
-
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                     Log.d(TAG, "Connection failure")
                 }
@@ -144,7 +143,6 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG, "$publishTextMessage published to ${publishTopic}")
                 }
-
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                     Log.d(TAG, "Failed to publish $publishTextMessage to $publishTopic")
                 }
@@ -175,7 +173,6 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
             override fun onSuccess(asyncActionToken: IMqttToken) {
                 Log.d(TAG, "first Subscribed to $subscriptionTopicPantryId")
             }
-
             override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                 Log.d(TAG, "Failed to subscribe to $subscriptionTopicPantryId")
                 exception.printStackTrace()
@@ -186,7 +183,6 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
             override fun onSuccess(asyncActionToken: IMqttToken) {
                 Log.d(TAG, "second Subscribed to $subscriptionTopicPantryStatus")
             }
-
             override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                 Log.d(TAG, "Failed to subscribe to $subscriptionTopicPantryStatus")
                 exception.printStackTrace()
@@ -202,7 +198,6 @@ class MqttGiver(userType: PantryActivity) : AppCompatActivity() {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG, "Disconnected")
                 }
-
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                     Log.d(TAG, "Failed to disconnect")
                 }
