@@ -5,34 +5,34 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.smartpantry.MainActivity
-import com.example.smartpantry.MainActivityGiver
-import com.example.smartpantry.PhoneActivity
 import com.google.firebase.database.*
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
+// This class will establish MQTT connection between android mobile application(Taker Part) and IoT devices(NB033 magnetic door)
 
 class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
 
+    //variable to connect to MQTT
     private lateinit var mqttClient: MqttAndroidClient
+
     // TAG
     companion object {
         const val TAG = "AndroidMqttClient"
     }
+
     var subscriptionTopic: String? = null
     var publishTopic: String? = null
     var publishTextMessage: String? = null
-    var receiveMessage: String? = null
     var idUserTaker = mainActivity.id
+    //var receiveMessage: String? = null
 
-    //firebase
-//    private lateinit var myRef1: DatabaseReference // = FirebaseDatabase.getInstance().getReference()  //point to the root named "penquiz3d349"
+    // firebase
+    //private lateinit var myRef1: DatabaseReference // = FirebaseDatabase.getInstance().getReference()  //point to the root named "penquiz3d349"
 
-    private lateinit var phoneActivity: PhoneActivity
-
-
-
+    // a function that allow user's android mobile application connect to MQTT protocol
     fun connect(context: Context) {
+
         val serverURI = "tcp://broker.emqx.io:1883"
         mqttClient = MqttAndroidClient(context.applicationContext, serverURI, "kotlin_client")
         mqttClient.setCallback(object : MqttCallback {
@@ -48,9 +48,7 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
                     //updates["success"] = "off after"
                     //ref.updateChildren(updates)
                     unsubscribe(subscriptionTopic.toString())
-
                 }
-
             }
 
             override fun connectionLost(cause: Throwable?) {
@@ -61,11 +59,12 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
 
             }
         })
+
         val options = MqttConnectOptions()
         options.isCleanSession = true
         options.keepAliveInterval = 120  //This value, measured in seconds, defines the maximum time interval between messages sent or received
         options.isAutomaticReconnect = true
-        options.serverURIs = arrayOf("tcp://postman.cloudmqtt.com:14107")
+        options.serverURIs = arrayOf("tcp://postman.cloudmqtt.com:14107")  // serverURI is from cloudMqtt website
         options.userName = "ptnqociv"
         options.setPassword("Bc-dN1Ef9jo-".toCharArray())
 
@@ -80,7 +79,6 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
                     }, 5000)
 
                 }
-
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                     Log.d(TAG, "Connection failure")
                 }
@@ -88,10 +86,9 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
         } catch (e: MqttException) {
             e.printStackTrace()
         }
-
     }
 
-
+    // publish information from android mobile application to cloudMqtt with specific topic
     fun publishMessage( qos: Int = 1, retained: Boolean = false) {
 
         try {
@@ -114,6 +111,7 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
 
     }
 
+    // subscribe information from IoT device with specific topic
     fun subscribeTopic() {
 //        try {
 //            mqttClient.subscribe(topic, qos, null, object : IMqttActionListener {
@@ -157,6 +155,7 @@ class MqttClient(mainActivity: MainActivity) : AppCompatActivity() {
         }
     }
 
+    // stop establishing Mqtt connection
     fun unsubscribe(topic: String) {
         try {
             mqttClient.unsubscribe(topic, null, object : IMqttActionListener {
